@@ -8,7 +8,7 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  async function fetchJoke() {
+  const fetchJoke = async () => {
     if (loading) return;
 
     setLoading(true);
@@ -18,7 +18,7 @@ export default function App() {
       const response = await fetch(JOKE_API);
 
       if (!response.ok) {
-        throw new Error('Failed to fetch a joke.');
+        throw new Error('Failed to fetch joke');
       }
 
       const data = await response.json();
@@ -33,23 +33,22 @@ export default function App() {
 
       setJoke({
         setup: data.setup,
-        punchline: data.punchline
+        punchline: data.punchline,
       });
-
     } catch (err) {
       setJoke(null);
-      setError('Oops! Something went wrong. Please try again.');
-
+      setError('Could not fetch a joke. Try again.');
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
     <main className="page">
       <section className="joke-card" aria-labelledby="page-title">
-
-        <div className="emoji" aria-hidden="true">😂</div>
+        <div className="emoji" aria-hidden="true">
+          😂
+        </div>
 
         <h1 id="page-title">Random Joke Generator</h1>
 
@@ -63,9 +62,7 @@ export default function App() {
           aria-atomic="true"
         >
           {loading ? (
-            <p className="status-message">
-              Fetching a joke...
-            </p>
+            <p className="status-message">Fetching a joke...</p>
           ) : error ? (
             <p className="error-message" role="alert">
               {error}
@@ -77,7 +74,7 @@ export default function App() {
             </div>
           ) : (
             <p className="placeholder">
-              Click the button below to get a joke!
+              Click the button to fetch a fresh one.
             </p>
           )}
         </div>
@@ -89,7 +86,6 @@ export default function App() {
         >
           {loading ? 'Fetching...' : 'Fetch joke'}
         </button>
-
       </section>
     </main>
   );
