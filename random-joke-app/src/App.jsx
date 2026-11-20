@@ -35,6 +35,8 @@ export default function App() {
         setup: data.setup,
         punchline: data.punchline,
       });
+
+      setError('');
     } catch (err) {
       setJoke(null);
       setError('Could not fetch a joke. Try again.');
@@ -62,7 +64,9 @@ export default function App() {
           aria-atomic="true"
         >
           {loading ? (
-            <p className="status-message">Fetching a joke...</p>
+            <p className="status-message">
+              Fetching a joke...
+            </p>
           ) : error ? (
             <p className="error-message" role="alert">
               {error}
@@ -79,17 +83,17 @@ export default function App() {
           )}
         </div>
 
-    <button
-  type="button"
-  onClick={fetchJoke}
-  disabled={loading}
->
-  {loading
-    ? 'Fetching...'
-    : error
-      ? 'Try again'
-      : 'Fetch joke'}
-</button>
+        <button
+          type="button"
+          onClick={fetchJoke}
+          disabled={loading}
+        >
+          {loading
+            ? 'Fetching...'
+            : error
+              ? 'Try again'
+              : 'Fetch joke'}
+        </button>
       </section>
     </main>
   );
