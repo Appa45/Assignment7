@@ -1,0 +1,119 @@
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  min-height: 100vh;
+}
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.joke-card {
+  width: 100%;
+  max-width: 550px;
+  padding: 40px 30px;
+  background: white;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+}
+
+.emoji {
+  font-size: 55px;
+  margin-bottom: 20px;
+}
+
+h1 {
+  color: #333;
+  font-size: 28px;
+  margin-bottom: 12px;
+}
+
+.subtitle {
+  color: #777;
+  margin-bottom: 25px;
+}
+
+.joke-content {
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  margin-bottom: 20px;
+  background: #f7f7fb;
+  border-radius: 12px;
+}
+
+.placeholder {
+  color: #888;
+}
+
+.status-message {
+  color: #667eea;
+  font-weight: bold;
+}
+
+.error-message {
+  color: #e53935;
+  font-weight: bold;
+}
+
+.joke-text {
+  width: 100%;
+}
+
+.setup {
+  color: #333;
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.punchline {
+  color: #667eea;
+  font-size: 17px;
+}
+
+button {
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 14px 30px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:hover:not(:disabled) {
+  background: #5265d5;
+  transform: translateY(-2px);
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 480px) {
+  .joke-card {
+    padding: 30px 20px;
+  }
+
+  h1 {
+    font-size: 23px;
+  }
+}
