@@ -79,13 +79,17 @@ export default function App() {
           )}
         </div>
 
-        <button
-          type="button"
-          onClick={fetchJoke}
-          disabled={loading}
-        >
-          {loading ? 'Fetching...' : 'Fetch joke'}
-        </button>
+    <button
+  type="button"
+  onClick={fetchJoke}
+  disabled={loading}
+>
+  {loading
+    ? 'Fetching...'
+    : error
+      ? 'Try again'
+      : 'Fetch joke'}
+</button>
       </section>
     </main>
   );
