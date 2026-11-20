@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 const JOKE_API =
   'https://official-joke-api.appspot.com/random_joke';
@@ -9,9 +9,12 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const fetchJoke = async () => {
-    if (loading) return;
+  const requestInProgress = useRef(false);
 
+  const fetchJoke = async () => {
+    if (requestInProgress.current) return;
+
+    requestInProgress.current = true;
     setLoading(true);
     setError('');
 
@@ -19,7 +22,7 @@ export default function App() {
       const response = await fetch(JOKE_API);
 
       if (!response.ok) {
-        throw new Error('Failed to fetch joke');
+        throw new Error('Request failed');
       }
 
       const data = await response.json();
@@ -29,17 +32,18 @@ export default function App() {
         typeof data.setup !== 'string' ||
         typeof data.punchline !== 'string'
       ) {
-        throw new Error('Invalid joke response');
+        throw new Error('Invalid response');
       }
 
       setJoke({
         setup: data.setup,
         punchline: data.punchline,
       });
-    } catch (err) {
+    } catch (error) {
       setJoke(null);
       setError('Could not fetch a joke. Try again.');
     } finally {
+      requestInProgress.current = false;
       setLoading(false);
     }
   };
@@ -73,13 +77,8 @@ export default function App() {
             </p>
           ) : joke ? (
             <div className="joke-text">
-              <p className="setup">
-                {joke.setup}
-              </p>
-
-              <p className="punchline">
-                {joke.punchline}
-              </p>
+              <p className="setup">{joke.setup}</p>
+              <p className="punchline">{joke.punchline}</p>
             </div>
           ) : (
             <p className="placeholder">
