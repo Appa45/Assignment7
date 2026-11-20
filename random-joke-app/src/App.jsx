@@ -1,7 +1,8 @@
 
 import React, { useState } from 'react';
 
-const JOKE_API = 'https://official-joke-api.appspot.com/random_joke';
+const JOKE_API =
+  'https://official-joke-api.appspot.com/random_joke';
 
 export default function App() {
   const [joke, setJoke] = useState(null);
@@ -35,8 +36,6 @@ export default function App() {
         setup: data.setup,
         punchline: data.punchline,
       });
-
-      setError('');
     } catch (err) {
       setJoke(null);
       setError('Could not fetch a joke. Try again.');
@@ -48,6 +47,7 @@ export default function App() {
   return (
     <main className="page">
       <section className="joke-card" aria-labelledby="page-title">
+
         <div className="emoji" aria-hidden="true">
           😂
         </div>
@@ -73,8 +73,13 @@ export default function App() {
             </p>
           ) : joke ? (
             <div className="joke-text">
-              <p className="setup">{joke.setup}</p>
-              <p className="punchline">{joke.punchline}</p>
+              <p className="setup">
+                {joke.setup}
+              </p>
+
+              <p className="punchline">
+                {joke.punchline}
+              </p>
             </div>
           ) : (
             <p className="placeholder">
@@ -94,6 +99,7 @@ export default function App() {
               ? 'Try again'
               : 'Fetch joke'}
         </button>
+
       </section>
     </main>
   );
