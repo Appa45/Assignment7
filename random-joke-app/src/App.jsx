@@ -23,17 +23,19 @@ function App() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const { name, age, grade } = formData;
-
-    if (!name.trim() || !age || !grade.trim()) {
+    if (
+      !formData.name.trim() ||
+      !formData.age ||
+      !formData.grade
+    ) {
       return;
     }
 
     const newStudent = {
       id: Date.now(),
-      name: name.trim(),
-      age: Number(age),
-      grade: grade.trim(),
+      name: formData.name.trim(),
+      age: formData.age,
+      grade: formData.grade,
     };
 
     setStudents((prev) => [...prev, newStudent]);
@@ -45,11 +47,17 @@ function App() {
     });
   };
 
+  const handleRemove = (id) => {
+    setStudents((prev) =>
+      prev.filter((student) => student.id !== id)
+    );
+  };
+
   return (
     <div className="app-container">
       <header className="app-header">
         <h1>Student Entry Form</h1>
-        <p>Add and manage student details</p>
+        <p>Add students and review the list below.</p>
       </header>
 
       <main className="main-content">
@@ -63,7 +71,7 @@ function App() {
                 type="text"
                 id="name"
                 name="name"
-                placeholder="Enter student name"
+                placeholder="e.g. MS Dhoni"
                 value={formData.name}
                 onChange={handleChange}
                 required
@@ -76,25 +84,30 @@ function App() {
                 type="number"
                 id="age"
                 name="age"
-                placeholder="Enter student age"
+                placeholder="Enter age"
+                min="1"
                 value={formData.age}
                 onChange={handleChange}
-                min="1"
                 required
               />
             </div>
 
             <div className="form-group">
               <label htmlFor="grade">Grade</label>
-              <input
-                type="text"
+              <select
                 id="grade"
                 name="grade"
-                placeholder="Enter student grade"
                 value={formData.grade}
                 onChange={handleChange}
                 required
-              />
+              >
+                <option value="">Select grade</option>
+                {Array.from({ length: 12 }, (_, index) => (
+                  <option key={index + 1} value={String(index + 1)}>
+                    Grade {index + 1}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <button type="submit" className="add-button">
@@ -119,6 +132,14 @@ function App() {
                     <p>Age: {student.age}</p>
                     <p>Grade: {student.grade}</p>
                   </div>
+
+                  <button
+                    type="button"
+                    className="remove-button"
+                    onClick={() => handleRemove(student.id)}
+                  >
+                    Remove
+                  </button>
                 </div>
               ))}
             </div>
