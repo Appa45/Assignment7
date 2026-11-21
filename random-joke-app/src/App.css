@@ -158,3 +158,30 @@
     align-items: flex-start;
   }
 }
+
+
+.form-buttons {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+}
+
+.form-buttons .add-button {
+  flex: 1;
+}
+
+.clear-button {
+  flex: 1;
+  padding: 13px;
+  background-color: #e5e7eb;
+  color: #1f2937;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.clear-button:hover {
+  background-color: #d1d5db;
+}

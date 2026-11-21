@@ -3,12 +3,13 @@ import React, { useState } from "react";
 import "./App.css";
 
 function App() {
-  const [formData, setFormData] = useState({
+  const initialFormData = {
     name: "",
     age: "",
     grade: "",
-  });
+  };
 
+  const [formData, setFormData] = useState(initialFormData);
   const [students, setStudents] = useState([]);
 
   const handleChange = (event) => {
@@ -18,6 +19,10 @@ function App() {
       ...previousData,
       [name]: value,
     }));
+  };
+
+  const handleClear = () => {
+    setFormData(initialFormData);
   };
 
   const handleSubmit = (event) => {
@@ -32,8 +37,8 @@ function App() {
     const newStudent = {
       id: Date.now(),
       name: name.trim(),
-      age: age,
-      grade: grade,
+      age,
+      grade,
     };
 
     setStudents((previousStudents) => [
@@ -41,11 +46,7 @@ function App() {
       newStudent,
     ]);
 
-    setFormData({
-      name: "",
-      age: "",
-      grade: "",
-    });
+    setFormData(initialFormData);
   };
 
   const handleRemove = (id) => {
@@ -104,21 +105,30 @@ function App() {
               >
                 <option value="">Select grade</option>
 
-                {Array.from({ length: 12 }, (_, index) => {
-                  const className = `Class ${index + 1}`;
-
-                  return (
-                    <option key={className} value={className}>
-                      {className}
-                    </option>
-                  );
-                })}
+                {Array.from({ length: 12 }, (_, index) => (
+                  <option
+                    key={index + 1}
+                    value={String(index + 1)}
+                  >
+                    Class {index + 1}
+                  </option>
+                ))}
               </select>
             </div>
 
-            <button type="submit" className="add-button">
-              Add Student
-            </button>
+            <div className="form-buttons">
+              <button type="submit" className="add-button">
+                Add Student
+              </button>
+
+              <button
+                type="button"
+                className="clear-button"
+                onClick={handleClear}
+              >
+                Clear
+              </button>
+            </div>
           </form>
         </section>
 
@@ -136,7 +146,7 @@ function App() {
                   <div className="student-info">
                     <h3>{student.name}</h3>
                     <p>Age: {student.age}</p>
-                    <p>Grade: {student.grade}</p>
+                    <p>Grade: Class {student.grade}</p>
                   </div>
 
                   <button
