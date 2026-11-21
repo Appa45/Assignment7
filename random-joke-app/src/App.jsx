@@ -11,34 +11,35 @@ function App() {
 
   const [students, setStudents] = useState([]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  const handleChange = (event) => {
+    const { name, value } = event.target;
 
-    setFormData((prev) => ({
-      ...prev,
+    setFormData((previousData) => ({
+      ...previousData,
       [name]: value,
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = (event) => {
+    event.preventDefault();
 
-    if (
-      !formData.name.trim() ||
-      !formData.age ||
-      !formData.grade
-    ) {
+    const { name, age, grade } = formData;
+
+    if (!name.trim() || !age || !grade) {
       return;
     }
 
     const newStudent = {
       id: Date.now(),
-      name: formData.name.trim(),
-      age: formData.age,
-      grade: formData.grade,
+      name: name.trim(),
+      age: age,
+      grade: grade,
     };
 
-    setStudents((prev) => [...prev, newStudent]);
+    setStudents((previousStudents) => [
+      ...previousStudents,
+      newStudent,
+    ]);
 
     setFormData({
       name: "",
@@ -48,8 +49,8 @@ function App() {
   };
 
   const handleRemove = (id) => {
-    setStudents((prev) =>
-      prev.filter((student) => student.id !== id)
+    setStudents((previousStudents) =>
+      previousStudents.filter((student) => student.id !== id)
     );
   };
 
@@ -84,7 +85,7 @@ function App() {
                 type="number"
                 id="age"
                 name="age"
-                placeholder="Enter age"
+                placeholder="e.g. 14"
                 min="1"
                 value={formData.age}
                 onChange={handleChange}
@@ -102,11 +103,16 @@ function App() {
                 required
               >
                 <option value="">Select grade</option>
-                {Array.from({ length: 12 }, (_, index) => (
-                  <option key={index + 1} value={String(index + 1)}>
-                    Grade {index + 1}
-                  </option>
-                ))}
+
+                {Array.from({ length: 12 }, (_, index) => {
+                  const className = `Class ${index + 1}`;
+
+                  return (
+                    <option key={className} value={className}>
+                      {className}
+                    </option>
+                  );
+                })}
               </select>
             </div>
 

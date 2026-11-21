@@ -1,44 +1,44 @@
 
 .app-container {
+  width: 100%;
   min-height: 100vh;
-  padding: 35px 20px;
+  padding: 40px 20px;
 }
 
 .app-header {
   text-align: center;
-  margin-bottom: 35px;
+  margin-bottom: 30px;
 }
 
 .app-header h1 {
-  color: #222;
   font-size: 32px;
-  margin-bottom: 8px;
+  color: #1f2937;
+  margin-bottom: 10px;
 }
 
 .app-header p {
-  color: #777;
-  font-size: 15px;
+  font-size: 16px;
+  color: #6b7280;
 }
 
 .main-content {
-  width: 100%;
   max-width: 650px;
   margin: 0 auto;
 }
 
 .form-card {
-  background: #fff;
+  background: #ffffff;
   padding: 28px;
   border-radius: 10px;
-  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
   margin-bottom: 30px;
 }
 
 .form-card h2,
 .students-section h2 {
   font-size: 22px;
-  margin-bottom: 22px;
-  color: #222;
+  color: #1f2937;
+  margin-bottom: 20px;
 }
 
 .form-group {
@@ -48,96 +48,83 @@
 }
 
 .form-group label {
+  font-size: 15px;
   font-weight: 600;
   margin-bottom: 8px;
-  color: #333;
+  color: #374151;
 }
 
-.form-group input {
+.form-group input,
+.form-group select {
   width: 100%;
-  padding: 12px 14px;
-  border: 1px solid #ccc;
+  padding: 12px;
+  font-size: 15px;
+  border: 1px solid #d1d5db;
   border-radius: 6px;
   outline: none;
-  font-size: 15px;
-  box-sizing: border-box;
+  background-color: #ffffff;
 }
 
-.form-group input:focus {
+.form-group input:focus,
+.form-group select:focus {
   border-color: #2563eb;
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.12);
 }
 
 .add-button {
   width: 100%;
   padding: 13px;
-  background: #2563eb;
-  color: #fff;
+  background-color: #2563eb;
+  color: #ffffff;
   border: none;
   border-radius: 6px;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s ease;
 }
 
 .add-button:hover {
-  background: #1d4ed8;
+  background-color: #1d4ed8;
 }
 
 .students-section {
-  background: #fff;
+  background: #ffffff;
   padding: 28px;
   border-radius: 10px;
-  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
 }
 
 .empty-message {
-  text-align: center;
-  color: #888;
-  padding: 20px 0;
+  color: #6b7280;
+  font-size: 15px;
 }
 
 .student-list {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 15px;
 }
 
 .student-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
   padding: 16px;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
-  background: #f9fafb;
 }
 
 .student-info h3 {
-  margin: 0 0 10px;
-  color: #222;
   font-size: 18px;
+  color: #1f2937;
+  margin-bottom: 8px;
 }
 
 .student-info p {
-  margin: 5px 0;
-  color: #555;
   font-size: 14px;
+  color: #6b7280;
+  margin-top: 5px;
 }
-
-@media (max-width: 600px) {
-  .app-container {
-    padding: 25px 14px;
-  }
-
-  .app-header h1 {
-    font-size: 26px;
-  }
-
-  .form-card,
-  .students-section {
-    padding: 20px;
-  }
-}
-
 
 .remove-button {
   background-color: #dc2626;
@@ -153,12 +140,21 @@
   background-color: #b91c1c;
 }
 
-.form-group select {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  font-size: 15px;
-  background-color: #ffffff;
-}
+@media (max-width: 600px) {
+  .app-container {
+    padding: 25px 14px;
+  }
 
+  .app-header h1 {
+    font-size: 26px;
+  }
+
+  .form-card,
+  .students-section {
+    padding: 20px;
+  }
+
+  .student-card {
+    align-items: flex-start;
+  }
+}
