@@ -12,32 +12,40 @@ export default function App() {
   // Prevent multiple requests while one is running
   const requestInProgress = useRef(false);
 
- const fetchJoke = async () => {
-  setLoading(true);
-  setError("");
+  const fetchJoke = async () => {
+    // Prevent duplicate requests
+    if (requestInProgress.current) return;
 
-  try {
-    const response = await fetch(
-      "https://official-joke-api.appspot.com/random_joke"
-    );
+    requestInProgress.current = true;
 
-    if (!response.ok) {
-      throw new Error("Failed to fetch joke");
+    setLoading(true);
+    setError('');
+
+    try {
+      const response = await fetch(JOKE_API);
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch joke');
+      }
+
+      const data = await response.json();
+
+      setJoke(data);
+    } catch (err) {
+      setError('Could not fetch a joke. Try again.');
+      setJoke(null);
+    } finally {
+      setLoading(false);
+      requestInProgress.current = false;
     }
-
-    const data = await response.json();
-    setJoke(data);
-  } catch (error) {
-    setError("Could not fetch a joke. Try again.");
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   return (
     <main className="page">
-      <section className="joke-card" aria-labelledby="page-title">
-
+      <section
+        className="joke-card"
+        aria-labelledby="page-title"
+      >
         <div className="emoji" aria-hidden="true">
           😂
         </div>
@@ -80,10 +88,16 @@ export default function App() {
           )}
         </div>
 
-        <button onClick={fetchJoke} disabled={loading}>
-  {loading ? "Fetching..." : "Fetch joke"}
-</button>
-
+        <button
+          onClick={fetchJoke}
+          disabled={loading}
+        >
+          {loading
+            ? 'Fetching...'
+            : error
+            ? 'Try again'
+            : 'Fetch joke'}
+        </button>
       </section>
     </main>
   );
