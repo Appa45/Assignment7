@@ -1,119 +1,139 @@
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+.app-container {
   min-height: 100vh;
+  padding: 35px 20px;
 }
 
-.page {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-}
-
-.joke-card {
-  width: 100%;
-  max-width: 550px;
-  padding: 40px 30px;
-  background: white;
-  border-radius: 20px;
+.app-header {
   text-align: center;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+  margin-bottom: 35px;
 }
 
-.emoji {
-  font-size: 55px;
-  margin-bottom: 20px;
+.app-header h1 {
+  color: #222;
+  font-size: 32px;
+  margin-bottom: 8px;
 }
 
-h1 {
-  color: #333;
-  font-size: 28px;
-  margin-bottom: 12px;
-}
-
-.subtitle {
+.app-header p {
   color: #777;
-  margin-bottom: 25px;
+  font-size: 15px;
 }
 
-.joke-content {
-  min-height: 120px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  margin-bottom: 20px;
-  background: #f7f7fb;
-  border-radius: 12px;
-}
-
-.placeholder {
-  color: #888;
-}
-
-.status-message {
-  color: #667eea;
-  font-weight: bold;
-}
-
-.error-message {
-  color: #e53935;
-  font-weight: bold;
-}
-
-.joke-text {
+.main-content {
   width: 100%;
+  max-width: 650px;
+  margin: 0 auto;
 }
 
-.setup {
-  color: #333;
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 15px;
-}
-
-.punchline {
-  color: #667eea;
-  font-size: 17px;
-}
-
-button {
-  background: #667eea;
-  color: white;
-  border: none;
+.form-card {
+  background: #fff;
+  padding: 28px;
   border-radius: 10px;
-  padding: 14px 30px;
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+  margin-bottom: 30px;
+}
+
+.form-card h2,
+.students-section h2 {
+  font-size: 22px;
+  margin-bottom: 22px;
+  color: #222;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+  font-size: 15px;
+  box-sizing: border-box;
+}
+
+.form-group input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.12);
+}
+
+.add-button {
+  width: 100%;
+  padding: 13px;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
   font-size: 16px;
-  font-weight: bold;
+  font-weight: 600;
   cursor: pointer;
-  transition: 0.2s;
+  transition: background 0.2s ease;
 }
 
-button:hover:not(:disabled) {
-  background: #5265d5;
-  transform: translateY(-2px);
+.add-button:hover {
+  background: #1d4ed8;
 }
 
-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+.students-section {
+  background: #fff;
+  padding: 28px;
+  border-radius: 10px;
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
 }
 
-@media (max-width: 480px) {
-  .joke-card {
-    padding: 30px 20px;
+.empty-message {
+  text-align: center;
+  color: #888;
+  padding: 20px 0;
+}
+
+.student-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.student-card {
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #f9fafb;
+}
+
+.student-info h3 {
+  margin: 0 0 10px;
+  color: #222;
+  font-size: 18px;
+}
+
+.student-info p {
+  margin: 5px 0;
+  color: #555;
+  font-size: 14px;
+}
+
+@media (max-width: 600px) {
+  .app-container {
+    padding: 25px 14px;
   }
 
-  h1 {
-    font-size: 23px;
+  .app-header h1 {
+    font-size: 26px;
+  }
+
+  .form-card,
+  .students-section {
+    padding: 20px;
   }
 }

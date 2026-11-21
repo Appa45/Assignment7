@@ -1,97 +1,132 @@
 
-import React, { useState, useRef } from 'react';
+import React, { useState } from "react";
+import "./App.css";
 
-const JOKE_API =
-  'https://official-joke-api.appspot.com/random_joke';
+function App() {
+  const [formData, setFormData] = useState({
+    name: "",
+    age: "",
+    grade: "",
+  });
 
-export default function App() {
-  const [joke, setJoke] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [students, setStudents] = useState([]);
 
-  const requestInProgress = useRef(false);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
 
-  const fetchJoke = async () => {
-    if (requestInProgress.current) return;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
-    requestInProgress.current = true;
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-    setLoading(true);
-    setError('');
+    const { name, age, grade } = formData;
 
-    try {
-      const response = await fetch(JOKE_API);
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch joke');
-      }
-
-      const data = await response.json();
-
-      setJoke(data);
-    } catch (err) {
-      setJoke(null);
-      setError('Could not fetch a joke. Try again.');
-    } finally {
-      requestInProgress.current = false;
-      setLoading(false);
+    if (!name.trim() || !age || !grade.trim()) {
+      return;
     }
+
+    const newStudent = {
+      id: Date.now(),
+      name: name.trim(),
+      age: Number(age),
+      grade: grade.trim(),
+    };
+
+    setStudents((prev) => [...prev, newStudent]);
+
+    setFormData({
+      name: "",
+      age: "",
+      grade: "",
+    });
   };
 
   return (
-    <main className="page">
-      <section className="joke-card" aria-labelledby="page-title">
+    <div className="app-container">
+      <header className="app-header">
+        <h1>Student Entry Form</h1>
+        <p>Add and manage student details</p>
+      </header>
 
-        <div className="emoji" aria-hidden="true">
-          😂
-        </div>
+      <main className="main-content">
+        <section className="form-card">
+          <h2>Add Student</h2>
 
-        <h1 id="page-title">
-          Random Joke Generator
-        </h1>
-
-        <p className="subtitle">
-          Need a laugh? Fetch a random joke!
-        </p>
-
-        <div
-          className="joke-content"
-          aria-live="polite"
-          aria-atomic="true"
-        >
-          {loading ? (
-            <p className="status-message">
-              Fetching a joke...
-            </p>
-          ) : error ? (
-            <p className="error-message" role="alert">
-              {error}
-            </p>
-          ) : joke ? (
-            <div className="joke-text">
-              <p className="setup">{joke.setup}</p>
-              <p className="punchline">{joke.punchline}</p>
+          <form onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label htmlFor="name">Name</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="Enter student name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+              />
             </div>
-          ) : (
-            <p className="placeholder">
-              Click the button to fetch a fresh one.
+
+            <div className="form-group">
+              <label htmlFor="age">Age</label>
+              <input
+                type="number"
+                id="age"
+                name="age"
+                placeholder="Enter student age"
+                value={formData.age}
+                onChange={handleChange}
+                min="1"
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="grade">Grade</label>
+              <input
+                type="text"
+                id="grade"
+                name="grade"
+                placeholder="Enter student grade"
+                value={formData.grade}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <button type="submit" className="add-button">
+              Add Student
+            </button>
+          </form>
+        </section>
+
+        <section className="students-section">
+          <h2>Student List</h2>
+
+          {students.length === 0 ? (
+            <p className="empty-message">
+              No students added yet.
             </p>
+          ) : (
+            <div className="student-list">
+              {students.map((student) => (
+                <div className="student-card" key={student.id}>
+                  <div className="student-info">
+                    <h3>{student.name}</h3>
+                    <p>Age: {student.age}</p>
+                    <p>Grade: {student.grade}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           )}
-        </div>
-
-        <button
-          type="button"
-          onClick={fetchJoke}
-          disabled={loading}
-        >
-          {loading
-            ? 'Fetching...'
-            : error
-            ? 'Try again'
-            : 'Fetch joke'}
-        </button>
-
-      </section>
-    </main>
+        </section>
+      </main>
+    </div>
   );
 }
+
+export default App;
