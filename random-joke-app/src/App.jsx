@@ -9,11 +9,9 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Prevent multiple requests while one is running
   const requestInProgress = useRef(false);
 
   const fetchJoke = async () => {
-    // Prevent duplicate requests
     if (requestInProgress.current) return;
 
     requestInProgress.current = true;
@@ -32,20 +30,18 @@ export default function App() {
 
       setJoke(data);
     } catch (err) {
-      setError('Could not fetch a joke. Try again.');
       setJoke(null);
+      setError('Could not fetch a joke. Try again.');
     } finally {
-      setLoading(false);
       requestInProgress.current = false;
+      setLoading(false);
     }
   };
 
   return (
     <main className="page">
-      <section
-        className="joke-card"
-        aria-labelledby="page-title"
-      >
+      <section className="joke-card" aria-labelledby="page-title">
+
         <div className="emoji" aria-hidden="true">
           😂
         </div>
@@ -73,13 +69,8 @@ export default function App() {
             </p>
           ) : joke ? (
             <div className="joke-text">
-              <p className="setup">
-                {joke.setup}
-              </p>
-
-              <p className="punchline">
-                {joke.punchline}
-              </p>
+              <p className="setup">{joke.setup}</p>
+              <p className="punchline">{joke.punchline}</p>
             </div>
           ) : (
             <p className="placeholder">
@@ -89,6 +80,7 @@ export default function App() {
         </div>
 
         <button
+          type="button"
           onClick={fetchJoke}
           disabled={loading}
         >
@@ -98,6 +90,7 @@ export default function App() {
             ? 'Try again'
             : 'Fetch joke'}
         </button>
+
       </section>
     </main>
   );
