@@ -13,10 +13,10 @@ function App() {
 
     const trimmedUsername = username.trim();
 
-    // Empty username validation
+    // Empty username validation - exact assessment text
     if (!trimmedUsername) {
       setUser(null);
-      setError("Please enter a username");
+      setError("Please enter a GitHub username.");
       return;
     }
 
@@ -31,11 +31,7 @@ function App() {
 
       if (!response.ok) {
         if (response.status === 404) {
-          throw new Error("User not found");
-        }
-
-        if (response.status === 403) {
-          throw new Error("GitHub API rate limit exceeded. Try again later.");
+          throw new Error("User not found.");
         }
 
         throw new Error("Something went wrong. Please try again.");
@@ -44,7 +40,7 @@ function App() {
       const data = await response.json();
       setUser(data);
     } catch (err) {
-      setError(err.message || "Unable to fetch user details");
+      setError(err.message);
     } finally {
       setLoading(false);
     }
@@ -52,131 +48,92 @@ function App() {
 
   return (
     <div className="app-container">
-      <header className="app-header">
-        <h1>GitHub User Details</h1>
-        <p>Search GitHub users and view their profile details.</p>
-      </header>
-
       <main className="main-content">
         <section className="search-card">
+          <h1>GitHub User Finder</h1>
+
+          <p className="subtitle">
+            Search for any GitHub user and explore their profile.
+          </p>
+
           <form onSubmit={handleSearch}>
             <div className="form-group">
-              <label htmlFor="username">GitHub Username</label>
-
               <input
                 type="text"
-                id="username"
                 name="username"
                 placeholder="Enter GitHub username"
                 value={username}
                 onChange={(event) => {
                   setUsername(event.target.value);
-                  if (error) setError("");
+                  setError("");
                 }}
               />
+
+              <button type="submit" disabled={loading}>
+                {loading ? "Searching..." : "Search"}
+              </button>
             </div>
-
-            <button
-              type="submit"
-              className="search-button"
-              disabled={loading}
-            >
-              {loading ? "Searching..." : "Search"}
-            </button>
           </form>
-        </section>
 
-        {error && (
-          <div className="error-message" role="alert">
-            {error}
-          </div>
-        )}
+          {error && (
+            <p className="error-message" role="alert">
+              {error}
+            </p>
+          )}
 
-        {loading && (
-          <p className="loading-message">Loading user details...</p>
-        )}
+          {loading && (
+            <p className="loading-message">
+              Loading...
+            </p>
+          )}
 
-        {user && (
-          <section className="user-card">
-            <div className="user-profile">
+          {!user && !error && !loading && (
+            <p className="empty-message">
+              Search for a GitHub user to see their details.
+            </p>
+          )}
+
+          {user && (
+            <div className="user-card">
               <img
                 src={user.avatar_url}
-                alt={`${user.login}'s avatar`}
+                alt={`${user.login} avatar`}
                 className="user-avatar"
               />
 
-              <div className="user-heading">
-                <h2>{user.name || user.login}</h2>
-                <p className="username">@{user.login}</p>
+              <h2>{user.name || user.login}</h2>
 
-                {user.bio && <p className="user-bio">{user.bio}</p>}
+              <p className="username">@{user.login}</p>
+
+              {user.bio && <p>{user.bio}</p>}
+
+              <div className="user-details">
+                <div>
+                  <strong>{user.public_repos}</strong>
+                  <span>Repositories</span>
+                </div>
+
+                <div>
+                  <strong>{user.followers}</strong>
+                  <span>Followers</span>
+                </div>
+
+                <div>
+                  <strong>{user.following}</strong>
+                  <span>Following</span>
+                </div>
               </div>
+
+              <a
+                href={user.html_url}
+                target="_blank"
+                rel="noreferrer"
+              >
+                View GitHub Profile
+              </a>
             </div>
-
-            <div className="user-details">
-              <div className="detail-item">
-                <span>Repositories</span>
-                <strong>{user.public_repos}</strong>
-              </div>
-
-              <div className="detail-item">
-                <span>Followers</span>
-                <strong>{user.followers}</strong>
-              </div>
-
-              <div className="detail-item">
-                <span>Following</span>
-                <strong>{user.following}</strong>
-              </div>
-            </div>
-
-            <div className="additional-details">
-              {user.location && (
-                <p>
-                  <strong>Location:</strong> {user.location}
-                </p>
-              )}
-
-              {user.company && (
-                <p>
-                  <strong>Company:</strong> {user.company}
-                </p>
-              )}
-
-              {user.blog && (
-                <p>
-                  <strong>Website:</strong>{" "}
-                  <a
-                    href={
-                      user.blog.startsWith("http")
-                        ? user.blog
-                        : `https://${user.blog}`
-                    }
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    {user.blog}
-                  </a>
-                </p>
-              )}
-
-              {user.email && (
-                <p>
-                  <strong>Email:</strong> {user.email}
-                </p>
-              )}
-            </div>
-
-            <a
-              href={user.html_url}
-              target="_blank"
-              rel="noreferrer"
-              className="profile-link"
-            >
-              View GitHub Profile
-            </a>
-          </section>
-        )}
+          )}
+        </section>
       </main>
     </div>
   );
