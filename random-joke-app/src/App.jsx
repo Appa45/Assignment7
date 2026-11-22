@@ -93,46 +93,64 @@ function App() {
             </p>
           )}
 
-          {user && (
-            <div className="user-card">
-              <img
-                src={user.avatar_url}
-                alt={`${user.login} avatar`}
-                className="user-avatar"
-              />
+        
+{user && (
+  <div className="user-card">
+    <img
+      src={user.avatar_url}
+      alt={`${user.login} avatar`}
+      className="user-avatar"
+    />
 
-              <h2>{user.name || user.login}</h2>
+    <h2>{user.name || user.login}</h2>
 
-              <p className="username">@{user.login}</p>
+    <p className="username">@{user.login}</p>
 
-              {user.bio && <p>{user.bio}</p>}
+    {user.bio && <p>{user.bio}</p>}
 
-              <div className="user-details">
-                <div>
-                  <strong>{user.public_repos}</strong>
-                  <span>Repositories</span>
-                </div>
+    {user.location && (
+      <p className="user-location">
+        {user.location}
+      </p>
+    )}
 
-                <div>
-                  <strong>{user.followers}</strong>
-                  <span>Followers</span>
-                </div>
+    {user.company && (
+      <p>{user.company}</p>
+    )}
 
-                <div>
-                  <strong>{user.following}</strong>
-                  <span>Following</span>
-                </div>
-              </div>
+    {user.blog && (
+      <p>{user.blog}</p>
+    )}
 
-              <a
-                href={user.html_url}
-                target="_blank"
-                rel="noreferrer"
-              >
-                View GitHub Profile
-              </a>
-            </div>
-          )}
+    {user-details-placeholder}
+
+    <div className="user-details">
+      <div>
+        <strong>{user.public_repos}</strong>
+        <span>Repositories</span>
+      </div>
+
+      <div>
+        <strong>{user.followers}</strong>
+        <span>Followers</span>
+      </div>
+
+      <div>
+        <strong>{user.following}</strong>
+        <span>Following</span>
+      </div>
+    </div>
+
+    <a
+      href={user.html_url}
+      target="_blank"
+      rel="noreferrer"
+    >
+      View GitHub Profile
+    </a>
+  </div>
+)}
+
         </section>
       </main>
     </div>

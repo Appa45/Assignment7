@@ -163,3 +163,10 @@
     font-size: 24px;
   }
 }
+
+.user-location {
+  color: #4b5563;
+  font-size: 14px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
