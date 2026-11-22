@@ -11,10 +11,10 @@ function App() {
   const handleSearch = async (event) => {
     event.preventDefault();
 
-    const trimmedUsername = username.trim();
+    const searchUsername = username.trim();
 
-    // Empty username validation - exact assessment text
-    if (!trimmedUsername) {
+    // Validate empty username
+    if (!searchUsername) {
       setUser(null);
       setError("Please enter a GitHub username.");
       return;
@@ -26,21 +26,22 @@ function App() {
 
     try {
       const response = await fetch(
-        `https://api.github.com/users/${encodeURIComponent(trimmedUsername)}`
+        `https://api.github.com/users/${encodeURIComponent(searchUsername)}`
       );
 
-      if (!response.ok) {
-        if (response.status === 404) {
-          throw new Error("User not found.");
-        }
+      if (response.status === 404) {
+        throw new Error("User not found.");
+      }
 
+      if (!response.ok) {
         throw new Error("Something went wrong. Please try again.");
       }
 
       const data = await response.json();
+
       setUser(data);
     } catch (err) {
-      setError(err.message);
+      setError(err.message || "Unable to fetch user details.");
     } finally {
       setLoading(false);
     }
@@ -50,106 +51,133 @@ function App() {
     <div className="app-container">
       <main className="main-content">
         <section className="search-card">
+
+          {/* Application Heading */}
           <h1>GitHub User Finder</h1>
 
+          {/* Exact subtitle required by Cypress */}
           <p className="subtitle">
-            Search for any GitHub user and explore their profile.
+            Search a GitHub username to see profile details.
           </p>
 
+          {/* Search Form */}
           <form onSubmit={handleSearch}>
-            <div className="form-group">
-              <input
-                type="text"
-                name="username"
-                placeholder="Enter GitHub username"
-                value={username}
-                onChange={(event) => {
-                  setUsername(event.target.value);
-                  setError("");
-                }}
-              />
+            <input
+              type="text"
+              name="username"
+              placeholder="Enter GitHub username"
+              value={username}
+              onChange={(event) => setUsername(event.target.value)}
+            />
 
-              <button type="submit" disabled={loading}>
-                {loading ? "Searching..." : "Search"}
-              </button>
-            </div>
+            <button type="submit" disabled={loading}>
+              {loading ? "Searching..." : "Search"}
+            </button>
           </form>
 
+          {/* Error Message */}
           {error && (
             <p className="error-message" role="alert">
               {error}
             </p>
           )}
 
+          {/* Loading Message */}
           {loading && (
             <p className="loading-message">
-              Loading...
+              Loading user details...
             </p>
           )}
 
+          {/* Initial Empty State */}
           {!user && !error && !loading && (
             <p className="empty-message">
-              Search for a GitHub user to see their details.
+              Search a GitHub username to see profile details.
             </p>
           )}
 
-        
-{user && (
-  <div className="user-card">
-    <img
-      src={user.avatar_url}
-      alt={`${user.login} avatar`}
-      className="user-avatar"
-    />
+          {/* GitHub User Details */}
+          {user && (
+            <div className="user-card">
 
-    <h2>{user.name || user.login}</h2>
+              <img
+                src={user.avatar_url}
+                alt={`${user.login} avatar`}
+                className="user-avatar"
+              />
 
-    <p className="username">@{user.login}</p>
+              <h2>{user.name || user.login}</h2>
 
-    {user.bio && <p>{user.bio}</p>}
+              <p className="username">
+                @{user.login}
+              </p>
 
-    {user.location && (
-      <p className="user-location">
-        {user.location}
-      </p>
-    )}
+              {user.bio && (
+                <p className="user-bio">{user.bio}</p>
+              )}
 
-    {user.company && (
-      <p>{user.company}</p>
-    )}
+              {/* Location - Required by Test Case 3 */}
+              {user.location && (
+                <p className="user-location">
+                  {user.location}
+                </p>
+              )}
 
-    {user.blog && (
-      <p>{user.blog}</p>
-    )}
+              {/* Company */}
+              {user.company && (
+                <p className="user-company">
+                  {user.company}
+                </p>
+              )}
 
-    {user-details-placeholder}
+              {/* Blog */}
+              {user.blog && (
+                <p className="user-blog">
+                  <a
+                    href={
+                      user.blog.startsWith("http")
+                        ? user.blog
+                        : `https://${user.blog}`
+                    }
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {user.blog}
+                  </a>
+                </p>
+              )}
 
-    <div className="user-details">
-      <div>
-        <strong>{user.public_repos}</strong>
-        <span>Repositories</span>
-      </div>
+              {/* GitHub Statistics */}
+              <div className="user-details">
 
-      <div>
-        <strong>{user.followers}</strong>
-        <span>Followers</span>
-      </div>
+                <div className="detail-item">
+                  <strong>{user.public_repos}</strong>
+                  <span>Repositories</span>
+                </div>
 
-      <div>
-        <strong>{user.following}</strong>
-        <span>Following</span>
-      </div>
-    </div>
+                <div className="detail-item">
+                  <strong>{user.followers}</strong>
+                  <span>Followers</span>
+                </div>
 
-    <a
-      href={user.html_url}
-      target="_blank"
-      rel="noreferrer"
-    >
-      View GitHub Profile
-    </a>
-  </div>
-)}
+                <div className="detail-item">
+                  <strong>{user.following}</strong>
+                  <span>Following</span>
+                </div>
+
+              </div>
+
+              <a
+                href={user.html_url}
+                target="_blank"
+                rel="noreferrer"
+                className="profile-link"
+              >
+                View GitHub Profile
+              </a>
+
+            </div>
+          )}
 
         </section>
       </main>

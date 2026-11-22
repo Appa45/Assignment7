@@ -5,19 +5,19 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 25px 16px;
+  padding: 20px;
 }
 
 .main-content {
   width: 100%;
   max-width: 550px;
-  margin: 0 auto;
+  margin: auto;
 }
 
 .search-card {
   width: 100%;
-  background: #ffffff;
   padding: 35px;
+  background: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   text-align: center;
@@ -26,22 +26,22 @@
 .search-card h1 {
   font-size: 28px;
   color: #1f2937;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .subtitle {
-  color: #6b7280;
   font-size: 15px;
+  color: #6b7280;
   margin-bottom: 25px;
 }
 
-.form-group {
+.search-card form {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.form-group input {
+.search-card input {
   width: 100%;
   padding: 13px;
   border: 1px solid #d1d5db;
@@ -50,15 +50,15 @@
   outline: none;
 }
 
-.form-group input:focus {
+.search-card input:focus {
   border-color: #2563eb;
 }
 
-.form-group button {
+.search-card button {
   width: 100%;
   padding: 13px;
   background: #2563eb;
-  color: white;
+  color: #ffffff;
   border: none;
   border-radius: 7px;
   font-size: 16px;
@@ -66,11 +66,11 @@
   cursor: pointer;
 }
 
-.form-group button:hover {
+.search-card button:hover {
   background: #1d4ed8;
 }
 
-.form-group button:disabled {
+.search-card button:disabled {
   opacity: 0.7;
   cursor: not-allowed;
 }
@@ -120,6 +120,20 @@
   margin-bottom: 15px;
 }
 
+.user-bio,
+.user-location,
+.user-company,
+.user-blog {
+  color: #4b5563;
+  font-size: 14px;
+  margin: 10px 0;
+}
+
+.user-blog a {
+  color: #2563eb;
+  overflow-wrap: anywhere;
+}
+
 .user-details {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -127,7 +141,7 @@
   margin: 20px 0;
 }
 
-.user-details div {
+.detail-item {
   display: flex;
   flex-direction: column;
   gap: 7px;
@@ -136,22 +150,27 @@
   border-radius: 7px;
 }
 
-.user-details strong {
+.detail-item strong {
   font-size: 20px;
+  color: #1f2937;
 }
 
-.user-details span {
+.detail-item span {
   color: #6b7280;
   font-size: 12px;
 }
 
-.user-card a {
+.profile-link {
   display: inline-block;
   padding: 11px 20px;
   background: #2563eb;
-  color: white;
+  color: #ffffff;
   text-decoration: none;
   border-radius: 7px;
+}
+
+.profile-link:hover {
+  background: #1d4ed8;
 }
 
 @media (max-width: 600px) {
@@ -162,11 +181,4 @@
   .search-card h1 {
     font-size: 24px;
   }
-}
-
-.user-location {
-  color: #4b5563;
-  font-size: 14px;
-  margin-top: 10px;
-  margin-bottom: 10px;
 }
