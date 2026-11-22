@@ -26,19 +26,12 @@
   margin: 0 auto;
 }
 
-.form-card {
+.search-card {
   background: #ffffff;
   padding: 28px;
   border-radius: 10px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-  margin-bottom: 30px;
-}
-
-.form-card h2,
-.students-section h2 {
-  font-size: 22px;
-  color: #1f2937;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
 .form-group {
@@ -54,8 +47,7 @@
   color: #374151;
 }
 
-.form-group input,
-.form-group select {
+.form-group input {
   width: 100%;
   padding: 12px;
   font-size: 15px;
@@ -65,12 +57,11 @@
   background-color: #ffffff;
 }
 
-.form-group input:focus,
-.form-group select:focus {
+.form-group input:focus {
   border-color: #2563eb;
 }
 
-.add-button {
+.search-button {
   width: 100%;
   padding: 13px;
   background-color: #2563eb;
@@ -82,62 +73,124 @@
   cursor: pointer;
 }
 
-.add-button:hover {
+.search-button:hover {
   background-color: #1d4ed8;
 }
 
-.students-section {
+.search-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.error-message {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  padding: 14px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 15px;
+}
+
+.loading-message {
+  text-align: center;
+  color: #2563eb;
+  margin: 20px 0;
+}
+
+.user-card {
   background: #ffffff;
   padding: 28px;
   border-radius: 10px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
 }
 
-.empty-message {
-  color: #6b7280;
-  font-size: 15px;
-}
-
-.student-list {
+.user-profile {
   display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.student-card {
-  display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: 15px;
-  padding: 16px;
-  border: 1px solid #e5e7eb;
+  gap: 22px;
+  margin-bottom: 25px;
+}
+
+.user-avatar {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-heading h2 {
+  color: #1f2937;
+  font-size: 24px;
+  margin-bottom: 5px;
+}
+
+.username {
+  color: #2563eb;
+  margin-bottom: 10px;
+}
+
+.user-bio {
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+.user-details {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 25px;
+}
+
+.detail-item {
+  text-align: center;
+  padding: 16px 8px;
+  background: #f3f4f6;
   border-radius: 8px;
 }
 
-.student-info h3 {
-  font-size: 18px;
-  color: #1f2937;
+.detail-item span {
+  display: block;
+  font-size: 14px;
+  color: #6b7280;
   margin-bottom: 8px;
 }
 
-.student-info p {
-  font-size: 14px;
-  color: #6b7280;
-  margin-top: 5px;
+.detail-item strong {
+  font-size: 22px;
+  color: #1f2937;
 }
 
-.remove-button {
-  background-color: #dc2626;
+.additional-details {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 18px;
+  margin-bottom: 20px;
+}
+
+.additional-details p {
+  color: #4b5563;
+  margin-bottom: 12px;
+  overflow-wrap: anywhere;
+}
+
+.additional-details a {
+  color: #2563eb;
+}
+
+.profile-link {
+  display: block;
+  text-align: center;
+  padding: 12px;
+  background-color: #2563eb;
   color: #ffffff;
-  border: none;
   border-radius: 6px;
-  padding: 9px 16px;
-  cursor: pointer;
-  font-size: 14px;
+  text-decoration: none;
+  font-weight: 600;
 }
 
-.remove-button:hover {
-  background-color: #b91c1c;
+.profile-link:hover {
+  background-color: #1d4ed8;
 }
 
 @media (max-width: 600px) {
@@ -149,39 +202,38 @@
     font-size: 26px;
   }
 
-  .form-card,
-  .students-section {
+  .search-card,
+  .user-card {
     padding: 20px;
   }
 
-  .student-card {
+  .user-profile {
     align-items: flex-start;
+    gap: 15px;
   }
-}
 
+  .user-avatar {
+    width: 80px;
+    height: 80px;
+  }
 
-.form-buttons {
-  display: flex;
-  gap: 12px;
-  width: 100%;
-}
+  .user-heading h2 {
+    font-size: 20px;
+  }
 
-.form-buttons .add-button {
-  flex: 1;
-}
+  .user-details {
+    gap: 7px;
+  }
 
-.clear-button {
-  flex: 1;
-  padding: 13px;
-  background-color: #e5e7eb;
-  color: #1f2937;
-  border: none;
-  border-radius: 6px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-}
+  .detail-item {
+    padding: 12px 4px;
+  }
 
-.clear-button:hover {
-  background-color: #d1d5db;
+  .detail-item span {
+    font-size: 12px;
+  }
+
+  .detail-item strong {
+    font-size: 19px;
+  }
 }

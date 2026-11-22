@@ -3,164 +3,180 @@ import React, { useState } from "react";
 import "./App.css";
 
 function App() {
-  const initialFormData = {
-    name: "",
-    age: "",
-    grade: "",
-  };
+  const [username, setUsername] = useState("");
+  const [user, setUser] = useState(null);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const [formData, setFormData] = useState(initialFormData);
-  const [students, setStudents] = useState([]);
-
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-
-    setFormData((previousData) => ({
-      ...previousData,
-      [name]: value,
-    }));
-  };
-
-  const handleClear = () => {
-    setFormData(initialFormData);
-  };
-
-  const handleSubmit = (event) => {
+  const handleSearch = async (event) => {
     event.preventDefault();
 
-    const { name, age, grade } = formData;
+    const trimmedUsername = username.trim();
 
-    if (!name.trim() || !age || !grade) {
+    // Empty username validation
+    if (!trimmedUsername) {
+      setUser(null);
+      setError("Please enter a username");
       return;
     }
 
-    const newStudent = {
-      id: Date.now(),
-      name: name.trim(),
-      age,
-      grade,
-    };
+    setLoading(true);
+    setError("");
+    setUser(null);
 
-    setStudents((previousStudents) => [
-      ...previousStudents,
-      newStudent,
-    ]);
+    try {
+      const response = await fetch(
+        `https://api.github.com/users/${encodeURIComponent(trimmedUsername)}`
+      );
 
-    setFormData(initialFormData);
-  };
+      if (!response.ok) {
+        if (response.status === 404) {
+          throw new Error("User not found");
+        }
 
-  const handleRemove = (id) => {
-    setStudents((previousStudents) =>
-      previousStudents.filter((student) => student.id !== id)
-    );
+        if (response.status === 403) {
+          throw new Error("GitHub API rate limit exceeded. Try again later.");
+        }
+
+        throw new Error("Something went wrong. Please try again.");
+      }
+
+      const data = await response.json();
+      setUser(data);
+    } catch (err) {
+      setError(err.message || "Unable to fetch user details");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="app-container">
       <header className="app-header">
-        <h1>Student Entry Form</h1>
-        <p>Add students and review the list below.</p>
+        <h1>GitHub User Details</h1>
+        <p>Search GitHub users and view their profile details.</p>
       </header>
 
       <main className="main-content">
-        <section className="form-card">
-          <h2>Add Student</h2>
-
-          <form onSubmit={handleSubmit}>
+        <section className="search-card">
+          <form onSubmit={handleSearch}>
             <div className="form-group">
-              <label htmlFor="name">Name</label>
+              <label htmlFor="username">GitHub Username</label>
+
               <input
                 type="text"
-                id="name"
-                name="name"
-                placeholder="e.g. MS Dhoni"
-                value={formData.name}
-                onChange={handleChange}
-                required
+                id="username"
+                name="username"
+                placeholder="Enter GitHub username"
+                value={username}
+                onChange={(event) => {
+                  setUsername(event.target.value);
+                  if (error) setError("");
+                }}
               />
             </div>
 
-            <div className="form-group">
-              <label htmlFor="age">Age</label>
-              <input
-                type="number"
-                id="age"
-                name="age"
-                placeholder="e.g. 14"
-                min="1"
-                value={formData.age}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="grade">Grade</label>
-              <select
-                id="grade"
-                name="grade"
-                value={formData.grade}
-                onChange={handleChange}
-                required
-              >
-                <option value="">Select grade</option>
-
-                {Array.from({ length: 12 }, (_, index) => (
-                  <option
-                    key={index + 1}
-                    value={String(index + 1)}
-                  >
-                    Class {index + 1}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="form-buttons">
-              <button type="submit" className="add-button">
-                Add Student
-              </button>
-
-              <button
-                type="button"
-                className="clear-button"
-                onClick={handleClear}
-              >
-                Clear
-              </button>
-            </div>
+            <button
+              type="submit"
+              className="search-button"
+              disabled={loading}
+            >
+              {loading ? "Searching..." : "Search"}
+            </button>
           </form>
         </section>
 
-        <section className="students-section">
-          <h2>Student List</h2>
+        {error && (
+          <div className="error-message" role="alert">
+            {error}
+          </div>
+        )}
 
-          {students.length === 0 ? (
-            <p className="empty-message">
-              No students added yet.
-            </p>
-          ) : (
-            <div className="student-list">
-              {students.map((student) => (
-                <div className="student-card" key={student.id}>
-                  <div className="student-info">
-                    <h3>{student.name}</h3>
-                    <p>Age: {student.age}</p>
-                    <p>Grade: Class {student.grade}</p>
-                  </div>
+        {loading && (
+          <p className="loading-message">Loading user details...</p>
+        )}
 
-                  <button
-                    type="button"
-                    className="remove-button"
-                    onClick={() => handleRemove(student.id)}
-                  >
-                    Remove
-                  </button>
-                </div>
-              ))}
+        {user && (
+          <section className="user-card">
+            <div className="user-profile">
+              <img
+                src={user.avatar_url}
+                alt={`${user.login}'s avatar`}
+                className="user-avatar"
+              />
+
+              <div className="user-heading">
+                <h2>{user.name || user.login}</h2>
+                <p className="username">@{user.login}</p>
+
+                {user.bio && <p className="user-bio">{user.bio}</p>}
+              </div>
             </div>
-          )}
-        </section>
+
+            <div className="user-details">
+              <div className="detail-item">
+                <span>Repositories</span>
+                <strong>{user.public_repos}</strong>
+              </div>
+
+              <div className="detail-item">
+                <span>Followers</span>
+                <strong>{user.followers}</strong>
+              </div>
+
+              <div className="detail-item">
+                <span>Following</span>
+                <strong>{user.following}</strong>
+              </div>
+            </div>
+
+            <div className="additional-details">
+              {user.location && (
+                <p>
+                  <strong>Location:</strong> {user.location}
+                </p>
+              )}
+
+              {user.company && (
+                <p>
+                  <strong>Company:</strong> {user.company}
+                </p>
+              )}
+
+              {user.blog && (
+                <p>
+                  <strong>Website:</strong>{" "}
+                  <a
+                    href={
+                      user.blog.startsWith("http")
+                        ? user.blog
+                        : `https://${user.blog}`
+                    }
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {user.blog}
+                  </a>
+                </p>
+              )}
+
+              {user.email && (
+                <p>
+                  <strong>Email:</strong> {user.email}
+                </p>
+              )}
+            </div>
+
+            <a
+              href={user.html_url}
+              target="_blank"
+              rel="noreferrer"
+              className="profile-link"
+            >
+              View GitHub Profile
+            </a>
+          </section>
+        )}
       </main>
     </div>
   );
