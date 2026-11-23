@@ -2,8 +2,8 @@
 .app-container {
   min-height: 100vh;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   padding: 24px;
 }
 
@@ -12,24 +12,22 @@
   max-width: 500px;
   padding: 35px;
   background: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  border-radius: 14px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
 }
 
-.header {
+.list-card h1 {
   text-align: center;
-  margin-bottom: 28px;
-}
-
-.header h1 {
-  font-size: 30px;
+  font-size: 28px;
   color: #1f2937;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
-.header p {
-  font-size: 15px;
+.subtitle {
+  text-align: center;
   color: #6b7280;
+  margin-bottom: 25px;
+  font-size: 15px;
 }
 
 .item-form {
@@ -40,26 +38,24 @@
 .item-form input {
   flex: 1;
   min-width: 0;
-  padding: 13px 14px;
+  padding: 13px;
   border: 1px solid #d1d5db;
-  border-radius: 8px;
+  border-radius: 7px;
   font-size: 15px;
   outline: none;
 }
 
 .item-form input:focus {
   border-color: #4f46e5;
-  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
 }
 
 .item-form button {
-  padding: 13px 20px;
-  border: none;
-  border-radius: 8px;
+  padding: 12px 22px;
   background: #4f46e5;
   color: #ffffff;
+  border: none;
+  border-radius: 7px;
   font-size: 15px;
-  font-weight: 600;
   cursor: pointer;
 }
 
@@ -67,40 +63,38 @@
   background: #4338ca;
 }
 
-.error-message {
-  margin-top: 12px;
-  color: #dc2626;
-  font-size: 14px;
-}
-
-.list-section {
-  margin-top: 30px;
-}
-
-.list-section h2 {
-  margin-bottom: 15px;
-  color: #1f2937;
-  font-size: 20px;
-}
-
 .item-list {
-  list-style-type: disc;
-  padding-left: 25px;
+  list-style: none;
+  margin-top: 25px;
+  padding: 0;
 }
 
 .item-list li {
-  padding: 10px 5px;
-  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px;
+  margin-bottom: 10px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
   color: #374151;
-  border-bottom: 1px solid #e5e7eb;
-  font-size: 15px;
   overflow-wrap: anywhere;
 }
 
-.empty-message {
-  color: #9ca3af;
-  font-size: 14px;
-  padding: 12px 0;
+.remove-button {
+  flex-shrink: 0;
+  padding: 8px 12px;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.remove-button:hover {
+  background: #dc2626;
 }
 
 @media (max-width: 480px) {
@@ -108,8 +102,8 @@
     padding: 25px 20px;
   }
 
-  .header h1 {
-    font-size: 25px;
+  .list-card h1 {
+    font-size: 24px;
   }
 
   .item-form {
