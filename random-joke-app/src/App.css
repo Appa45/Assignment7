@@ -2,115 +2,24 @@
 .app-container {
   min-height: 100vh;
   display: flex;
-  align-items: center;
   justify-content: center;
-  padding: 24px;
-}
-
-.list-card {
-  width: 100%;
-  max-width: 500px;
-  padding: 35px;
-  background: #ffffff;
-  border-radius: 14px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-}
-
-.list-card h1 {
-  text-align: center;
-  font-size: 28px;
-  color: #1f2937;
-  margin-bottom: 12px;
-}
-
-.subtitle {
-  text-align: center;
-  color: #6b7280;
-  margin-bottom: 25px;
-  font-size: 15px;
-}
-
-.item-form {
-  display: flex;
-  gap: 10px;
-}
-
-.item-form input {
-  flex: 1;
-  min-width: 0;
-  padding: 13px;
-  border: 1px solid #d1d5db;
-  border-radius: 7px;
-  font-size: 15px;
-  outline: none;
-}
-
-.item-form input:focus {
-  border-color: #4f46e5;
-}
-
-.item-form button {
-  padding: 12px 22px;
-  background: #4f46e5;
-  color: #ffffff;
-  border: none;
-  border-radius: 7px;
-  font-size: 15px;
-  cursor: pointer;
-}
-
-.item-form button:hover {
-  background: #4338ca;
-}
-
-.item-list {
-  list-style: none;
-  margin-top: 25px;
-  padding: 0;
-}
-
-.item-list li {
-  display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 12px;
-  margin-bottom: 10px;
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  color: #374151;
-  overflow-wrap: anywhere;
+  padding: 20px;
 }
 
-.remove-button {
-  flex-shrink: 0;
-  padding: 8px 12px;
-  background: #ef4444;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
+.square {
+  width: 300px;
+  height: 300px;
+  background-color: #4f46e5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid #312e81;
 }
 
-.remove-button:hover {
-  background: #dc2626;
-}
-
-@media (max-width: 480px) {
-  .list-card {
-    padding: 25px 20px;
-  }
-
-  .list-card h1 {
-    font-size: 24px;
-  }
-
-  .item-form {
-    flex-direction: column;
-  }
-
-  .item-form button {
-    width: 100%;
-  }
+.circle {
+  width: 150px;
+  height: 150px;
+  background-color: #facc15;
+  border-radius: 50%;
 }
