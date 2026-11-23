@@ -3,55 +3,66 @@ import React, { useState } from "react";
 import "./App.css";
 
 function App() {
-  const [number, setNumber] = useState("");
-  const [result, setResult] = useState("");
+  const [item, setItem] = useState("");
+  const [items, setItems] = useState([]);
+  const [error, setError] = useState("");
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    const value = number.trim();
+    const trimmedItem = item.trim();
 
-    if (value === "" || !Number.isFinite(Number(value))) {
-      setResult("Not a valid number!");
+    if (!trimmedItem) {
+      setError("Please enter an item.");
       return;
     }
 
-    const parsedNumber = Number(value);
-
-    if (parsedNumber % 2 === 0) {
-      setResult(`The number ${value} is even!`);
-    } else {
-      setResult(`Oops, ${value} is odd!`);
-    }
+    setItems((previousItems) => [...previousItems, trimmedItem]);
+    setItem("");
+    setError("");
   };
 
   return (
     <main className="app-container">
-      <section className="parity-card">
-        <h1>Even/Odd Checker</h1>
+      <section className="list-card">
+        <div className="header">
+          <h1>My To-Do List</h1>
+          <p>Add your items to the list below.</p>
+        </div>
 
-        <p className="subtitle">
-          Enter a number to check whether it is even or odd.
-        </p>
-
-        <form onSubmit={handleSubmit}>
+        <form className="item-form" onSubmit={handleSubmit}>
           <input
             type="text"
-            name="number"
-            value={number}
-            onChange={(event) => setNumber(event.target.value)}
-            placeholder="Enter a number"
+            name="item"
+            placeholder="Enter an item"
+            value={item}
+            onChange={(event) => {
+              setItem(event.target.value);
+              setError("");
+            }}
             autoComplete="off"
           />
 
-          <button type="submit">Check</button>
+          <button type="submit">Add Item</button>
         </form>
 
-        {result && (
-          <div className="result" role="status">
-            {result}
-          </div>
-        )}
+        {error && <p className="error-message">{error}</p>}
+
+        <div className="list-section">
+          <h2>My Items</h2>
+
+          <ul className="item-list">
+            {items.map((currentItem, index) => (
+              <li key={`${index}-${currentItem}`}>
+                {currentItem}
+              </li>
+            ))}
+          </ul>
+
+          {items.length === 0 && (
+            <p className="empty-message">No items added yet.</p>
+          )}
+        </div>
       </section>
     </main>
   );

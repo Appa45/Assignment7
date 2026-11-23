@@ -2,78 +2,121 @@
 .app-container {
   min-height: 100vh;
   display: flex;
-  align-items: center;
   justify-content: center;
-  padding: 20px;
+  align-items: center;
+  padding: 24px;
 }
 
-.parity-card {
+.list-card {
   width: 100%;
-  max-width: 440px;
+  max-width: 500px;
   padding: 35px;
   background: #ffffff;
-  border-radius: 14px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.header {
   text-align: center;
+  margin-bottom: 28px;
 }
 
-.parity-card h1 {
+.header h1 {
+  font-size: 30px;
   color: #1f2937;
-  font-size: 28px;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
-.subtitle {
-  color: #6b7280;
-  margin-bottom: 25px;
+.header p {
   font-size: 15px;
+  color: #6b7280;
 }
 
-.parity-card form {
+.item-form {
   display: flex;
-  flex-direction: column;
-  gap: 14px;
+  gap: 10px;
 }
 
-.parity-card input {
-  width: 100%;
-  padding: 13px;
+.item-form input {
+  flex: 1;
+  min-width: 0;
+  padding: 13px 14px;
   border: 1px solid #d1d5db;
-  border-radius: 7px;
-  font-size: 16px;
+  border-radius: 8px;
+  font-size: 15px;
   outline: none;
 }
 
-.parity-card input:focus {
+.item-form input:focus {
   border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
 }
 
-.parity-card button {
-  padding: 13px;
-  background: #4f46e5;
-  color: white;
+.item-form button {
+  padding: 13px 20px;
   border: none;
-  border-radius: 7px;
-  font-size: 16px;
+  border-radius: 8px;
+  background: #4f46e5;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
   cursor: pointer;
 }
 
-.parity-card button:hover {
+.item-form button:hover {
   background: #4338ca;
 }
 
-.result {
-  margin-top: 22px;
-  padding: 14px;
-  border-radius: 7px;
-  background: #f3f4f6;
+.error-message {
+  margin-top: 12px;
+  color: #dc2626;
+  font-size: 14px;
+}
+
+.list-section {
+  margin-top: 30px;
+}
+
+.list-section h2 {
+  margin-bottom: 15px;
   color: #1f2937;
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 20px;
+}
+
+.item-list {
+  list-style-type: disc;
+  padding-left: 25px;
+}
+
+.item-list li {
+  padding: 10px 5px;
+  margin-bottom: 6px;
+  color: #374151;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 15px;
+  overflow-wrap: anywhere;
+}
+
+.empty-message {
+  color: #9ca3af;
+  font-size: 14px;
+  padding: 12px 0;
 }
 
 @media (max-width: 480px) {
-  .parity-card {
+  .list-card {
     padding: 25px 20px;
+  }
+
+  .header h1 {
+    font-size: 25px;
+  }
+
+  .item-form {
+    flex-direction: column;
+  }
+
+  .item-form button {
+    width: 100%;
   }
 }
