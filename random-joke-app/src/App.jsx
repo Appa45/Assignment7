@@ -2,22 +2,24 @@
 import React, { useState } from "react";
 import "./App.css";
 
-const App = () => {
+function App() {
   const [output, setOutput] = useState("");
 
   const alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
   const handleAlphabetClick = (letter) => {
-    setOutput((prev) => prev + letter);
+    setOutput((previousOutput) => previousOutput + letter);
   };
 
   const handleBackspace = () => {
-    setOutput((prev) => prev.slice(0, -1));
+    setOutput((previousOutput) => previousOutput.slice(0, -1));
   };
 
   return (
-    <div className="container">
-      <h1>Alphabets</h1>
+    <div className="app">
+      <h1>Alphabet Buttons</h1>
+
+      <p>Click on any alphabet button to add it to the output.</p>
 
       <div className="output">
         {output}
@@ -27,22 +29,24 @@ const App = () => {
         {alphabets.map((letter) => (
           <button
             key={letter}
+            type="button"
             className="key"
             onClick={() => handleAlphabetClick(letter)}
           >
             {letter}
           </button>
         ))}
-
-        <button
-          className="key backspace"
-          onClick={handleBackspace}
-        >
-          Backspace
-        </button>
       </div>
+
+      <button
+        type="button"
+        className="backspace"
+        onClick={handleBackspace}
+      >
+        Backspace
+      </button>
     </div>
   );
-};
+}
 
 export default App;
