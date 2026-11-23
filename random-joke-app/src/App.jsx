@@ -4,67 +4,42 @@ import "./App.css";
 
 function App() {
   const [number, setNumber] = useState("");
-  const [result, setResult] = useState(null);
-
-  const handleChange = (event) => {
-    setNumber(event.target.value);
-    setResult(null);
-  };
+  const [result, setResult] = useState("");
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    const trimmedValue = number.trim();
+    const value = number.trim();
 
-    if (trimmedValue === "") {
-      setResult({
-        type: "error",
-        message: "Please enter a number.",
-      });
+    if (value === "" || !Number.isFinite(Number(value))) {
+      setResult("Not a valid number!");
       return;
     }
 
-    const parsedNumber = Number(trimmedValue);
-
-    if (!Number.isFinite(parsedNumber)) {
-      setResult({
-        type: "error",
-        message: "Please enter a valid number.",
-      });
-      return;
-    }
+    const parsedNumber = Number(value);
 
     if (parsedNumber % 2 === 0) {
-      setResult({
-        type: "even",
-        message: `${trimmedValue} is an Even Number`,
-      });
+      setResult(`The number ${value} is even!`);
     } else {
-      setResult({
-        type: "odd",
-        message: `${trimmedValue} is an Odd Number`,
-      });
+      setResult(`Oops, ${value} is odd!`);
     }
   };
 
   return (
     <main className="app-container">
       <section className="parity-card">
-        <h1>Check Parity</h1>
+        <h1>Even/Odd Checker</h1>
 
         <p className="subtitle">
           Enter a number to check whether it is even or odd.
         </p>
 
         <form onSubmit={handleSubmit}>
-          <label htmlFor="number">Enter a number</label>
-
           <input
-            id="number"
-            name="number"
             type="text"
+            name="number"
             value={number}
-            onChange={handleChange}
+            onChange={(event) => setNumber(event.target.value)}
             placeholder="Enter a number"
             autoComplete="off"
           />
@@ -73,12 +48,8 @@ function App() {
         </form>
 
         {result && (
-          <div
-            className={`result ${result.type}`}
-            role="status"
-            aria-live="polite"
-          >
-            {result.message}
+          <div className="result" role="status">
+            {result}
           </div>
         )}
       </section>
