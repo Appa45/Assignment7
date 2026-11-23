@@ -8,18 +8,18 @@ function App() {
   const alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
   const handleAlphabetClick = (letter) => {
-    setOutput((previousOutput) => previousOutput + letter);
+    setOutput((prev) => prev + letter);
   };
 
   const handleBackspace = () => {
-    setOutput((previousOutput) => previousOutput.slice(0, -1));
+    setOutput((prev) => prev.slice(0, -1));
   };
 
   return (
     <div className="app">
       <h1>Alphabet Buttons</h1>
 
-      <p>Click on any alphabet button to add it to the output.</p>
+      <p>Click letters</p>
 
       <div className="output">
         {output}
