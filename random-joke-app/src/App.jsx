@@ -3,111 +3,102 @@ import React, { useState } from "react";
 import "./App.css";
 
 function App() {
-  const [name, setName] = useState("");
-  const [age, setAge] = useState("");
-  const [place, setPlace] = useState("");
-  const [people, setPeople] = useState([]);
+  const [board, setBoard] = useState(Array(9).fill(""));
+  const [currentPlayer, setCurrentPlayer] = useState("X");
+  const [winner, setWinner] = useState(null);
+  const [isDraw, setIsDraw] = useState(false);
 
-  const handleAdd = (e) => {
-    e.preventDefault();
+  const winningCombinations = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+  ];
 
-    if (!name.trim() || !age || !place.trim()) {
+  const handleClick = (index) => {
+    if (board[index] || winner || isDraw) {
       return;
     }
 
-    const newPerson = {
-      id: Date.now(),
-      name: name.trim(),
-      age: age,
-      place: place.trim(),
-    };
+    const updatedBoard = [...board];
+    updatedBoard[index] = currentPlayer;
 
-    setPeople((prev) => [...prev, newPerson]);
+    setBoard(updatedBoard);
 
-    setName("");
-    setAge("");
-    setPlace("");
+    const hasWinner = winningCombinations.some((combination) =>
+      combination.every((position) => updatedBoard[position] === currentPlayer)
+    );
+
+    if (hasWinner) {
+      setWinner(currentPlayer);
+    } else if (updatedBoard.every((cell) => cell !== "")) {
+      setIsDraw(true);
+    } else {
+      setCurrentPlayer(currentPlayer === "X" ? "O" : "X");
+    }
   };
 
-  const handleClear = () => {
-    setName("");
-    setAge("");
-    setPlace("");
-  };
-
-  const handleRemove = (id) => {
-    setPeople((prev) => prev.filter((person) => person.id !== id));
+  const handleRestart = () => {
+    setBoard(Array(9).fill(""));
+    setCurrentPlayer("X");
+    setWinner(null);
+    setIsDraw(false);
   };
 
   return (
-    <main className="app-container">
-      <h1>Add People to Table</h1>
+    <main className="game-container">
+      <div className="game-card">
+        <h1>Tic Tac Toe</h1>
 
-      <form className="input-form" onSubmit={handleAdd}>
-        <input
-          type="text"
-          name="name"
-          placeholder="Enter Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
+        <p className="game-subtitle">
+          Play with your friend!
+        </p>
 
-        <input
-          type="number"
-          name="age"
-          placeholder="Enter Age"
-          value={age}
-          onChange={(e) => setAge(e.target.value)}
-        />
+        <div className="game-status">
+          {winner ? (
+            <h2>Player {winner} Wins!</h2>
+          ) : isDraw ? (
+            <h2>It's a Draw!</h2>
+          ) : (
+            <h2>Player {currentPlayer}'s Turn</h2>
+          )}
+        </div>
 
-        <input
-          type="text"
-          name="place"
-          placeholder="Enter Place"
-          value={place}
-          onChange={(e) => setPlace(e.target.value)}
-        />
+        <div className="game-board">
+          {board.map((cell, index) => (
+            <button
+              key={index}
+              type="button"
+              className={`game-cell ${cell ? `player-${cell.toLowerCase()}` : ""}`}
+              onClick={() => handleClick(index)}
+              disabled={Boolean(cell) || Boolean(winner) || isDraw}
+              aria-label={`Cell ${index + 1}${cell ? `: ${cell}` : ""}`}
+            >
+              {cell}
+            </button>
+          ))}
+        </div>
 
-        <button type="submit">Add</button>
+        {(winner || isDraw) && (
+          <p className="result-message">
+            {winner
+              ? `Congratulations! Player ${winner} is the winner!`
+              : "The game ended in a draw!"}
+          </p>
+        )}
 
-        <button type="button" onClick={handleClear}>
-          Clear
+        <button
+          type="button"
+          className="restart-button"
+          onClick={handleRestart}
+        >
+          Restart Game
         </button>
-      </form>
-
-      {people.length === 0 ? (
-        <p className="empty-message">No entries yet</p>
-      ) : (
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Age</th>
-              <th>Place</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {people.map((person) => (
-              <tr key={person.id}>
-                <td>{person.name}</td>
-                <td>{person.age}</td>
-                <td>{person.place}</td>
-                <td>
-                  <button
-                    type="button"
-                    className="remove-button"
-                    onClick={() => handleRemove(person.id)}
-                  >
-                    Remove
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+      </div>
     </main>
   );
 }
