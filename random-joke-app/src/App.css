@@ -21,10 +21,10 @@ body {
 
 .game-card {
   width: 100%;
-  max-width: 430px;
+  max-width: 450px;
   background: #ffffff;
-  padding: 35px 25px;
-  border-radius: 18px;
+  padding: 30px;
+  border-radius: 16px;
   text-align: center;
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
 }
@@ -33,22 +33,56 @@ body {
   color: #312e81;
   font-size: 32px;
   font-weight: 700;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
-.game-subtitle {
+.subtitle {
   color: #6b7280;
   font-size: 15px;
   margin-bottom: 25px;
 }
 
+.scoreboard {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+.score-box {
+  flex: 1;
+  padding: 15px;
+  border-radius: 10px;
+  background: #eef2ff;
+}
+
+.score-box h3 {
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.score-box p {
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.player-x-score h3,
+.player-x-score p {
+  color: #4f46e5;
+}
+
+.player-o-score h3,
+.player-o-score p {
+  color: #ec4899;
+}
+
 .game-status {
-  margin-bottom: 22px;
+  margin-bottom: 20px;
 }
 
 .game-status h2 {
-  font-size: 20px;
   color: #4338ca;
+  font-size: 20px;
   font-weight: 600;
 }
 
@@ -62,6 +96,7 @@ body {
 }
 
 .game-cell {
+  width: 100%;
   aspect-ratio: 1 / 1;
   border: none;
   border-radius: 10px;
@@ -70,12 +105,11 @@ body {
   font-size: 48px;
   font-weight: 700;
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.2s ease;
+  transition: background 0.2s ease;
 }
 
 .game-cell:not(:disabled):hover {
   background: #dbeafe;
-  transform: scale(1.04);
 }
 
 .game-cell:disabled {
@@ -97,25 +131,44 @@ body {
   margin-bottom: 20px;
 }
 
-.restart-button {
-  padding: 13px 30px;
+.game-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.restart-button,
+.reset-button {
+  padding: 12px 20px;
   border: none;
   border-radius: 8px;
-  background: #4f46e5;
-  color: #ffffff;
-  font-size: 16px;
+  color: white;
+  font-size: 15px;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s ease;
+}
+
+.restart-button {
+  background: #4f46e5;
 }
 
 .restart-button:hover {
   background: #3730a3;
 }
 
+.reset-button {
+  background: #dc2626;
+}
+
+.reset-button:hover {
+  background: #b91c1c;
+}
+
 @media (max-width: 480px) {
   .game-card {
-    padding: 28px 18px;
+    padding: 22px 16px;
   }
 
   .game-card h1 {
@@ -124,5 +177,14 @@ body {
 
   .game-cell {
     font-size: 40px;
+  }
+
+  .game-actions {
+    flex-direction: column;
+  }
+
+  .restart-button,
+  .reset-button {
+    width: 100%;
   }
 }

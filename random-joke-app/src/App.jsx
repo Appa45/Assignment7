@@ -2,25 +2,30 @@
 import React, { useState } from "react";
 import "./App.css";
 
+const winningCombinations = [
+  [0, 1, 2],
+  [3, 4, 5],
+  [6, 7, 8],
+  [0, 3, 6],
+  [1, 4, 7],
+  [2, 5, 8],
+  [0, 4, 8],
+  [2, 4, 6],
+];
+
 function App() {
   const [board, setBoard] = useState(Array(9).fill(""));
   const [currentPlayer, setCurrentPlayer] = useState("X");
-  const [winner, setWinner] = useState(null);
+  const [winner, setWinner] = useState("");
   const [isDraw, setIsDraw] = useState(false);
 
-  const winningCombinations = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-    [0, 4, 8],
-    [2, 4, 6],
-  ];
+  const [scores, setScores] = useState({
+    X: 0,
+    O: 0,
+  });
 
-  const handleClick = (index) => {
-    if (board[index] || winner || isDraw) {
+  const handleCellClick = (index) => {
+    if (board[index] !== "" || winner || isDraw) {
       return;
     }
 
@@ -30,33 +35,66 @@ function App() {
     setBoard(updatedBoard);
 
     const hasWinner = winningCombinations.some((combination) =>
-      combination.every((position) => updatedBoard[position] === currentPlayer)
+      combination.every(
+        (position) => updatedBoard[position] === currentPlayer
+      )
     );
 
     if (hasWinner) {
       setWinner(currentPlayer);
-    } else if (updatedBoard.every((cell) => cell !== "")) {
-      setIsDraw(true);
-    } else {
-      setCurrentPlayer(currentPlayer === "X" ? "O" : "X");
+
+      setScores((previousScores) => ({
+        ...previousScores,
+        [currentPlayer]: previousScores[currentPlayer] + 1,
+      }));
+
+      return;
     }
+
+    if (updatedBoard.every((cell) => cell !== "")) {
+      setIsDraw(true);
+      return;
+    }
+
+    setCurrentPlayer(currentPlayer === "X" ? "O" : "X");
   };
 
-  const handleRestart = () => {
+  const restartRound = () => {
     setBoard(Array(9).fill(""));
     setCurrentPlayer("X");
-    setWinner(null);
+    setWinner("");
     setIsDraw(false);
+  };
+
+  const resetAll = () => {
+    setBoard(Array(9).fill(""));
+    setCurrentPlayer("X");
+    setWinner("");
+    setIsDraw(false);
+    setScores({
+      X: 0,
+      O: 0,
+    });
   };
 
   return (
     <main className="game-container">
       <div className="game-card">
-        <h1>Tic Tac Toe</h1>
+        <h1>Tic-Tac-Toe</h1>
 
-        <p className="game-subtitle">
-          Play with your friend!
-        </p>
+        <p className="subtitle">Play with your friend!</p>
+
+        <div className="scoreboard">
+          <div className="score-box player-x-score">
+            <h3>Player X</h3>
+            <p>{scores.X}</p>
+          </div>
+
+          <div className="score-box player-o-score">
+            <h3>Player O</h3>
+            <p>{scores.O}</p>
+          </div>
+        </div>
 
         <div className="game-status">
           {winner ? (
@@ -73,31 +111,47 @@ function App() {
             <button
               key={index}
               type="button"
-              className={`game-cell ${cell ? `player-${cell.toLowerCase()}` : ""}`}
-              onClick={() => handleClick(index)}
-              disabled={Boolean(cell) || Boolean(winner) || isDraw}
-              aria-label={`Cell ${index + 1}${cell ? `: ${cell}` : ""}`}
+              className={`game-cell ${
+                cell ? `player-${cell.toLowerCase()}` : ""
+              }`}
+              onClick={() => handleCellClick(index)}
+              disabled={cell !== "" || Boolean(winner) || isDraw}
+              aria-label={`Cell ${index + 1}`}
             >
               {cell}
             </button>
           ))}
         </div>
 
-        {(winner || isDraw) && (
+        {winner && (
           <p className="result-message">
-            {winner
-              ? `Congratulations! Player ${winner} is the winner!`
-              : "The game ended in a draw!"}
+            Congratulations! Player {winner} wins!
           </p>
         )}
 
-        <button
-          type="button"
-          className="restart-button"
-          onClick={handleRestart}
-        >
-          Restart Game
-        </button>
+        {isDraw && (
+          <p className="result-message">
+            The game is a draw!
+          </p>
+        )}
+
+        <div className="game-actions">
+          <button
+            type="button"
+            className="restart-button"
+            onClick={restartRound}
+          >
+            Restart Round
+          </button>
+
+          <button
+            type="button"
+            className="reset-button"
+            onClick={resetAll}
+          >
+            Reset All
+          </button>
+        </div>
       </div>
     </main>
   );
