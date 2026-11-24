@@ -1,23 +1,17 @@
 
-import React, { useState } from "react";
+import { useState } from "react";
 import "./App.css";
 
-const initialBoard = Array(9)
-  .fill(null)
-  .map(() => Array(9).fill(""));
+const createEmptyBoard = () =>
+  Array.from({ length: 9 }, () => Array(9).fill(""));
 
 function App() {
-  const [board, setBoard] = useState(
-    initialBoard.map((row) => [...row])
-  );
-
+  const [board, setBoard] = useState(createEmptyBoard);
   const [message, setMessage] = useState("");
   const [isValid, setIsValid] = useState(null);
 
   const handleChange = (row, col, value) => {
-    if (value !== "" && !/^[1-9]$/.test(value)) {
-      return;
-    }
+    if (!/^[1-9]?$/.test(value)) return;
 
     const updatedBoard = board.map((r) => [...r]);
     updatedBoard[row][col] = value;
@@ -28,38 +22,34 @@ function App() {
   };
 
   const validateSudoku = () => {
-    const isComplete = board.every((row) =>
-      row.every((cell) => cell !== "")
-    );
+    const values = board.flat();
 
-    if (!isComplete) {
-      setIsValid(false);
+    if (values.some((value) => value === "")) {
       setMessage("Please fill all cells before validating.");
+      setIsValid(false);
       return;
     }
 
+    const isValidGroup = (group) =>
+      new Set(group).size === 9 &&
+      group.every((value) => /^[1-9]$/.test(value));
+
     // Validate rows
     for (let row = 0; row < 9; row++) {
-      const values = board[row];
-
-      if (new Set(values).size !== 9) {
+      if (!isValidGroup(board[row])) {
+        setMessage("Invalid Sudoku! Duplicate numbers found in a row/column/3x3 box.");
         setIsValid(false);
-        setMessage("Invalid Sudoku! Duplicate numbers found in a row.");
         return;
       }
     }
 
     // Validate columns
     for (let col = 0; col < 9; col++) {
-      const values = [];
+      const column = board.map((row) => row[col]);
 
-      for (let row = 0; row < 9; row++) {
-        values.push(board[row][col]);
-      }
-
-      if (new Set(values).size !== 9) {
+      if (!isValidGroup(column)) {
+        setMessage("Invalid Sudoku! Duplicate numbers found in a row/column/3x3 box.");
         setIsValid(false);
-        setMessage("Invalid Sudoku! Duplicate numbers found in a column.");
         return;
       }
     }
@@ -67,92 +57,70 @@ function App() {
     // Validate 3x3 boxes
     for (let boxRow = 0; boxRow < 9; boxRow += 3) {
       for (let boxCol = 0; boxCol < 9; boxCol += 3) {
-        const values = [];
+        const box = [];
 
         for (let row = boxRow; row < boxRow + 3; row++) {
           for (let col = boxCol; col < boxCol + 3; col++) {
-            values.push(board[row][col]);
+            box.push(board[row][col]);
           }
         }
 
-        if (new Set(values).size !== 9) {
+        if (!isValidGroup(box)) {
+          setMessage("Invalid Sudoku! Duplicate numbers found in a row/column/3x3 box.");
           setIsValid(false);
-          setMessage(
-            "Invalid Sudoku! Duplicate numbers found in a 3x3 box."
-          );
           return;
         }
       }
     }
 
-    setIsValid(true);
     setMessage("Congratulations! The Sudoku grid is valid.");
+    setIsValid(true);
   };
 
-  const resetBoard = () => {
-    setBoard(initialBoard.map((row) => [...row]));
+  const clearBoard = () => {
+    setBoard(createEmptyBoard());
     setMessage("");
     setIsValid(null);
   };
 
   return (
-    <main className="app-container">
-      <div className="sudoku-card">
+    <div className="app">
+      <div className="container">
         <h1>Sudoku Validator</h1>
 
-        <p className="subtitle">
-          Enter numbers from 1 to 9 and validate your Sudoku grid.
-        </p>
+        <p>Enter numbers 1-9 and validate the board.</p>
 
         <div className="board">
           {board.map((row, rowIndex) =>
-            row.map((cell, colIndex) => (
+            row.map((value, colIndex) => (
               <input
                 key={`${rowIndex}-${colIndex}`}
                 type="text"
                 inputMode="numeric"
                 maxLength="1"
                 className="cell"
-                value={cell}
-                aria-label={`Row ${rowIndex + 1} Column ${colIndex + 1}`}
-                onChange={(e) =>
-                  handleChange(rowIndex, colIndex, e.target.value)
+                value={value}
+                onChange={(event) =>
+                  handleChange(rowIndex, colIndex, event.target.value)
                 }
+                aria-label={`Row ${rowIndex + 1} Column ${colIndex + 1}`}
               />
             ))
           )}
         </div>
 
+        <div className="buttons">
+          <button onClick={validateSudoku}>Validate</button>
+          <button onClick={clearBoard}>Clear</button>
+        </div>
+
         {message && (
-          <p
-            className={`result-message ${
-              isValid ? "success" : "error"
-            }`}
-            role="status"
-          >
+          <p className={isValid ? "success-message" : "error-message"}>
             {message}
           </p>
         )}
-
-        <div className="button-container">
-          <button
-            type="button"
-            className="validate-button"
-            onClick={validateSudoku}
-          >
-            Validate Sudoku
-          </button>
-
-          <button
-            type="button"
-            className="reset-button"
-            onClick={resetBoard}
-          >
-            Reset
-          </button>
-        </div>
       </div>
-    </main>
+    </div>
   );
 }
 
