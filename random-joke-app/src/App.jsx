@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import React, { useState } from "react";
 import "./App.css";
 
 const createEmptyBoard = () =>
@@ -22,9 +22,7 @@ function App() {
   };
 
   const validateSudoku = () => {
-    const values = board.flat();
-
-    if (values.some((value) => value === "")) {
+    if (board.flat().some((value) => value === "")) {
       setMessage("Please fill all cells before validating.");
       setIsValid(false);
       return;
@@ -34,7 +32,7 @@ function App() {
       new Set(group).size === 9 &&
       group.every((value) => /^[1-9]$/.test(value));
 
-    // Validate rows
+    // Check rows
     for (let row = 0; row < 9; row++) {
       if (!isValidGroup(board[row])) {
         setMessage("Invalid Sudoku! Duplicate numbers found in a row/column/3x3 box.");
@@ -43,7 +41,7 @@ function App() {
       }
     }
 
-    // Validate columns
+    // Check columns
     for (let col = 0; col < 9; col++) {
       const column = board.map((row) => row[col]);
 
@@ -54,7 +52,7 @@ function App() {
       }
     }
 
-    // Validate 3x3 boxes
+    // Check 3x3 boxes
     for (let boxRow = 0; boxRow < 9; boxRow += 3) {
       for (let boxCol = 0; boxCol < 9; boxCol += 3) {
         const box = [];
