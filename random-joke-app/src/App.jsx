@@ -84,17 +84,15 @@ function App() {
 
         <p className="subtitle">Play with your friend!</p>
 
-        <div className="scoreboard">
-          <div className="score-box player-x-score">
-            <h3>Player X</h3>
-            <p>{scores.X}</p>
-          </div>
+       <div className="scoreboard">
+  <div className="score-box player-x-score">
+    <h3>X: {scores.X}</h3>
+  </div>
 
-          <div className="score-box player-o-score">
-            <h3>Player O</h3>
-            <p>{scores.O}</p>
-          </div>
-        </div>
+  <div className="score-box player-o-score">
+    <h3>O: {scores.O}</h3>
+  </div>
+</div>
 
         <div className="game-status">
           {winner ? (
