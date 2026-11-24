@@ -18,7 +18,7 @@ function App() {
     const newPerson = {
       id: Date.now(),
       name: name.trim(),
-      age,
+      age: age,
       place: place.trim(),
     };
 
@@ -69,13 +69,14 @@ function App() {
         />
 
         <button type="submit">Add</button>
+
         <button type="button" onClick={handleClear}>
           Clear
         </button>
       </form>
 
       {people.length === 0 ? (
-        <p className="empty-message">No people added yet.</p>
+        <p className="empty-message">No entries yet</p>
       ) : (
         <table>
           <thead>
