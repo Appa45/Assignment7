@@ -22,6 +22,7 @@ function App() {
   const [scores, setScores] = useState({
     X: 0,
     O: 0,
+    draws: 0,
   });
 
   const handleCellClick = (index) => {
@@ -53,6 +54,12 @@ function App() {
 
     if (updatedBoard.every((cell) => cell !== "")) {
       setIsDraw(true);
+
+      setScores((previousScores) => ({
+        ...previousScores,
+        draws: previousScores.draws + 1,
+      }));
+
       return;
     }
 
@@ -71,9 +78,11 @@ function App() {
     setCurrentPlayer("X");
     setWinner("");
     setIsDraw(false);
+
     setScores({
       X: 0,
       O: 0,
+      draws: 0,
     });
   };
 
@@ -84,15 +93,19 @@ function App() {
 
         <p className="subtitle">Play with your friend!</p>
 
-       <div className="scoreboard">
-  <div className="score-box player-x-score">
-    <h3>X: {scores.X}</h3>
-  </div>
+        <div className="scoreboard">
+          <div className="score-box player-x-score">
+            <h3>X: {scores.X}</h3>
+          </div>
 
-  <div className="score-box player-o-score">
-    <h3>O: {scores.O}</h3>
-  </div>
-</div>
+          <div className="score-box draw-score">
+            <h3>Draws: {scores.draws}</h3>
+          </div>
+
+          <div className="score-box player-o-score">
+            <h3>O: {scores.O}</h3>
+          </div>
+        </div>
 
         <div className="game-status">
           {winner ? (

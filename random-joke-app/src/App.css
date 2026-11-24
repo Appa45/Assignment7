@@ -188,3 +188,25 @@ body {
     width: 100%;
   }
 }
+
+.draw-score h3 {
+  color: #d97706;
+}
+
+.scoreboard {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.score-box {
+  padding: 15px 8px;
+  border-radius: 10px;
+  background: #eef2ff;
+}
+
+.score-box h3 {
+  font-size: 15px;
+  white-space: nowrap;
+}
