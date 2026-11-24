@@ -1,34 +1,123 @@
 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #f5f6fa;
+}
+
 .app-container {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  padding: 20px;
-  gap: 30px;
+  padding: 50px 20px;
 }
 
 .app-container h1 {
   font-size: 32px;
   font-weight: 700;
   color: #1f2937;
+  margin-bottom: 30px;
   text-align: center;
 }
 
-.square {
-  width: 300px;
-  height: 300px;
-  background-color: #4f46e5;
+.input-form {
+  width: 100%;
+  max-width: 650px;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 2px solid #312e81;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 30px;
 }
 
-.circle {
-  width: 150px;
-  height: 150px;
-  background-color: #facc15;
-  border-radius: 50%;
+.input-form input {
+  flex: 1;
+  min-width: 150px;
+  height: 42px;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 5px;
+  outline: none;
+  font-size: 15px;
+  background-color: #ffffff;
+}
+
+.input-form input:focus {
+  border-color: #4f46e5;
+}
+
+.input-form button {
+  height: 42px;
+  padding: 0 25px;
+  border: none;
+  border-radius: 5px;
+  background-color: #4f46e5;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.input-form button:hover {
+  background-color: #3730a3;
+}
+
+table {
+  width: 100%;
+  max-width: 650px;
+  border-collapse: collapse;
+  background-color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+th,
+td {
+  padding: 14px 16px;
+  text-align: left;
+  border: 1px solid #e5e7eb;
+  font-size: 15px;
+}
+
+th {
+  background-color: #4f46e5;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+td {
+  color: #374151;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #f9fafb;
+}
+
+@media (max-width: 600px) {
+  .app-container {
+    padding: 30px 15px;
+  }
+
+  .input-form {
+    flex-direction: column;
+  }
+
+  .input-form input,
+  .input-form button {
+    width: 100%;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  th,
+  td {
+    padding: 10px;
+    font-size: 14px;
+  }
 }
