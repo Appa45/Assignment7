@@ -2,165 +2,153 @@
 import React, { useState } from "react";
 import "./App.css";
 
-const winningCombinations = [
-  [0, 1, 2],
-  [3, 4, 5],
-  [6, 7, 8],
-  [0, 3, 6],
-  [1, 4, 7],
-  [2, 5, 8],
-  [0, 4, 8],
-  [2, 4, 6],
-];
+const initialBoard = Array(9)
+  .fill(null)
+  .map(() => Array(9).fill(""));
 
 function App() {
-  const [board, setBoard] = useState(Array(9).fill(""));
-  const [currentPlayer, setCurrentPlayer] = useState("X");
-  const [winner, setWinner] = useState("");
-  const [isDraw, setIsDraw] = useState(false);
+  const [board, setBoard] = useState(
+    initialBoard.map((row) => [...row])
+  );
 
-  const [scores, setScores] = useState({
-    X: 0,
-    O: 0,
-    draws: 0,
-  });
+  const [message, setMessage] = useState("");
+  const [isValid, setIsValid] = useState(null);
 
-  const handleCellClick = (index) => {
-    if (board[index] !== "" || winner || isDraw) {
+  const handleChange = (row, col, value) => {
+    if (value !== "" && !/^[1-9]$/.test(value)) {
       return;
     }
 
-    const updatedBoard = [...board];
-    updatedBoard[index] = currentPlayer;
+    const updatedBoard = board.map((r) => [...r]);
+    updatedBoard[row][col] = value;
 
     setBoard(updatedBoard);
+    setMessage("");
+    setIsValid(null);
+  };
 
-    const hasWinner = winningCombinations.some((combination) =>
-      combination.every(
-        (position) => updatedBoard[position] === currentPlayer
-      )
+  const validateSudoku = () => {
+    const isComplete = board.every((row) =>
+      row.every((cell) => cell !== "")
     );
 
-    if (hasWinner) {
-      setWinner(currentPlayer);
-
-      setScores((previousScores) => ({
-        ...previousScores,
-        [currentPlayer]: previousScores[currentPlayer] + 1,
-      }));
-
+    if (!isComplete) {
+      setIsValid(false);
+      setMessage("Please fill all cells before validating.");
       return;
     }
 
-    if (updatedBoard.every((cell) => cell !== "")) {
-      setIsDraw(true);
+    // Validate rows
+    for (let row = 0; row < 9; row++) {
+      const values = board[row];
 
-      setScores((previousScores) => ({
-        ...previousScores,
-        draws: previousScores.draws + 1,
-      }));
-
-      return;
+      if (new Set(values).size !== 9) {
+        setIsValid(false);
+        setMessage("Invalid Sudoku! Duplicate numbers found in a row.");
+        return;
+      }
     }
 
-    setCurrentPlayer(currentPlayer === "X" ? "O" : "X");
+    // Validate columns
+    for (let col = 0; col < 9; col++) {
+      const values = [];
+
+      for (let row = 0; row < 9; row++) {
+        values.push(board[row][col]);
+      }
+
+      if (new Set(values).size !== 9) {
+        setIsValid(false);
+        setMessage("Invalid Sudoku! Duplicate numbers found in a column.");
+        return;
+      }
+    }
+
+    // Validate 3x3 boxes
+    for (let boxRow = 0; boxRow < 9; boxRow += 3) {
+      for (let boxCol = 0; boxCol < 9; boxCol += 3) {
+        const values = [];
+
+        for (let row = boxRow; row < boxRow + 3; row++) {
+          for (let col = boxCol; col < boxCol + 3; col++) {
+            values.push(board[row][col]);
+          }
+        }
+
+        if (new Set(values).size !== 9) {
+          setIsValid(false);
+          setMessage(
+            "Invalid Sudoku! Duplicate numbers found in a 3x3 box."
+          );
+          return;
+        }
+      }
+    }
+
+    setIsValid(true);
+    setMessage("Congratulations! The Sudoku grid is valid.");
   };
 
-  const restartRound = () => {
-    setBoard(Array(9).fill(""));
-    setCurrentPlayer("X");
-    setWinner("");
-    setIsDraw(false);
-  };
-
-  const resetAll = () => {
-    setBoard(Array(9).fill(""));
-    setCurrentPlayer("X");
-    setWinner("");
-    setIsDraw(false);
-
-    setScores({
-      X: 0,
-      O: 0,
-      draws: 0,
-    });
+  const resetBoard = () => {
+    setBoard(initialBoard.map((row) => [...row]));
+    setMessage("");
+    setIsValid(null);
   };
 
   return (
-    <main className="game-container">
-      <div className="game-card">
-        <h1>Tic-Tac-Toe</h1>
+    <main className="app-container">
+      <div className="sudoku-card">
+        <h1>Sudoku Validator</h1>
 
-        <p className="subtitle">Play with your friend!</p>
+        <p className="subtitle">
+          Enter numbers from 1 to 9 and validate your Sudoku grid.
+        </p>
 
-        <div className="scoreboard">
-          <div className="score-box player-x-score">
-            <h3>X: {scores.X}</h3>
-          </div>
-
-          <div className="score-box draw-score">
-            <h3>Draws: {scores.draws}</h3>
-          </div>
-
-          <div className="score-box player-o-score">
-            <h3>O: {scores.O}</h3>
-          </div>
-        </div>
-
-        <div className="game-status">
-          {winner ? (
-            <h2>Player {winner} Wins!</h2>
-          ) : isDraw ? (
-            <h2>It's a Draw!</h2>
-          ) : (
-            <h2>Player {currentPlayer}'s Turn</h2>
+        <div className="board">
+          {board.map((row, rowIndex) =>
+            row.map((cell, colIndex) => (
+              <input
+                key={`${rowIndex}-${colIndex}`}
+                type="text"
+                inputMode="numeric"
+                maxLength="1"
+                className="cell"
+                value={cell}
+                aria-label={`Row ${rowIndex + 1} Column ${colIndex + 1}`}
+                onChange={(e) =>
+                  handleChange(rowIndex, colIndex, e.target.value)
+                }
+              />
+            ))
           )}
         </div>
 
-        <div className="game-board">
-          {board.map((cell, index) => (
-            <button
-              key={index}
-              type="button"
-              className={`game-cell ${
-                cell ? `player-${cell.toLowerCase()}` : ""
-              }`}
-              onClick={() => handleCellClick(index)}
-              disabled={cell !== "" || Boolean(winner) || isDraw}
-              aria-label={`Cell ${index + 1}`}
-            >
-              {cell}
-            </button>
-          ))}
-        </div>
-
-        {winner && (
-          <p className="result-message">
-            Congratulations! Player {winner} wins!
+        {message && (
+          <p
+            className={`result-message ${
+              isValid ? "success" : "error"
+            }`}
+            role="status"
+          >
+            {message}
           </p>
         )}
 
-        {isDraw && (
-          <p className="result-message">
-            The game is a draw!
-          </p>
-        )}
-
-        <div className="game-actions">
+        <div className="button-container">
           <button
             type="button"
-            className="restart-button"
-            onClick={restartRound}
+            className="validate-button"
+            onClick={validateSudoku}
           >
-            Restart Round
+            Validate Sudoku
           </button>
 
           <button
             type="button"
             className="reset-button"
-            onClick={resetAll}
+            onClick={resetBoard}
           >
-            Reset All
+            Reset
           </button>
         </div>
       </div>
