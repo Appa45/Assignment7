@@ -7,7 +7,7 @@
 
 body {
   font-family: Arial, Helvetica, sans-serif;
-  background-color: #f5f6fa;
+  background: #f5f6fa;
 }
 
 .app-container {
@@ -28,7 +28,7 @@ body {
 
 .input-form {
   width: 100%;
-  max-width: 650px;
+  max-width: 750px;
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
@@ -42,37 +42,41 @@ body {
   padding: 10px 12px;
   border: 1px solid #d1d5db;
   border-radius: 5px;
-  outline: none;
   font-size: 15px;
-  background-color: #ffffff;
+  outline: none;
 }
 
 .input-form input:focus {
   border-color: #4f46e5;
 }
 
-.input-form button {
+button {
   height: 42px;
-  padding: 0 25px;
+  padding: 0 22px;
   border: none;
   border-radius: 5px;
-  background-color: #4f46e5;
+  background: #4f46e5;
   color: white;
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
 }
 
-.input-form button:hover {
-  background-color: #3730a3;
+button:hover {
+  background: #3730a3;
+}
+
+.empty-message {
+  color: #6b7280;
+  font-size: 16px;
+  margin-top: 10px;
 }
 
 table {
   width: 100%;
-  max-width: 650px;
+  max-width: 750px;
   border-collapse: collapse;
-  background-color: #ffffff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  background: white;
 }
 
 th,
@@ -80,28 +84,27 @@ td {
   padding: 14px 16px;
   text-align: left;
   border: 1px solid #e5e7eb;
-  font-size: 15px;
 }
 
 th {
-  background-color: #4f46e5;
-  color: #ffffff;
-  font-weight: 600;
+  background: #4f46e5;
+  color: white;
 }
 
 td {
   color: #374151;
 }
 
-tbody tr:nth-child(even) {
-  background-color: #f9fafb;
+.remove-button {
+  background: #dc2626;
+  height: 35px;
+}
+
+.remove-button:hover {
+  background: #b91c1c;
 }
 
 @media (max-width: 600px) {
-  .app-container {
-    padding: 30px 15px;
-  }
-
   .input-form {
     flex-direction: column;
   }
@@ -112,12 +115,11 @@ tbody tr:nth-child(even) {
   }
 
   table {
-    width: 100%;
+    font-size: 13px;
   }
 
   th,
   td {
-    padding: 10px;
-    font-size: 14px;
+    padding: 9px;
   }
 }

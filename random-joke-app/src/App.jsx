@@ -6,34 +6,44 @@ function App() {
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
   const [place, setPlace] = useState("");
-  const [users, setUsers] = useState([]);
+  const [people, setPeople] = useState([]);
 
-  const handleSubmit = (e) => {
+  const handleAdd = (e) => {
     e.preventDefault();
 
     if (!name.trim() || !age || !place.trim()) {
       return;
     }
 
-    const newUser = {
+    const newPerson = {
       id: Date.now(),
       name: name.trim(),
-      age: age,
+      age,
       place: place.trim(),
     };
 
-    setUsers((prevUsers) => [...prevUsers, newUser]);
+    setPeople((prev) => [...prev, newPerson]);
 
     setName("");
     setAge("");
     setPlace("");
   };
 
-  return (
-    <div className="app-container">
-      <h1>Table Data</h1>
+  const handleClear = () => {
+    setName("");
+    setAge("");
+    setPlace("");
+  };
 
-      <form className="input-form" onSubmit={handleSubmit}>
+  const handleRemove = (id) => {
+    setPeople((prev) => prev.filter((person) => person.id !== id));
+  };
+
+  return (
+    <main className="app-container">
+      <h1>Add People to Table</h1>
+
+      <form className="input-form" onSubmit={handleAdd}>
         <input
           type="text"
           name="name"
@@ -59,28 +69,45 @@ function App() {
         />
 
         <button type="submit">Add</button>
+        <button type="button" onClick={handleClear}>
+          Clear
+        </button>
       </form>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Age</th>
-            <th>Place</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {users.map((user) => (
-            <tr key={user.id}>
-              <td>{user.name}</td>
-              <td>{user.age}</td>
-              <td>{user.place}</td>
+      {people.length === 0 ? (
+        <p className="empty-message">No people added yet.</p>
+      ) : (
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Age</th>
+              <th>Place</th>
+              <th>Action</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+          </thead>
+
+          <tbody>
+            {people.map((person) => (
+              <tr key={person.id}>
+                <td>{person.name}</td>
+                <td>{person.age}</td>
+                <td>{person.place}</td>
+                <td>
+                  <button
+                    type="button"
+                    className="remove-button"
+                    onClick={() => handleRemove(person.id)}
+                  >
+                    Remove
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </main>
   );
 }
 
