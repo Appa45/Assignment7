@@ -2,123 +2,247 @@
 import React, { useState } from "react";
 import "./App.css";
 
-const createEmptyBoard = () =>
-  Array.from({ length: 9 }, () => Array(9).fill(""));
+const ladders = {
+  3: 22,
+  5: 8,
+  11: 26,
+  20: 29,
+  27: 56,
+  36: 44,
+  51: 67,
+  71: 92,
+  80: 99,
+};
+
+const snakes = {
+  17: 4,
+  19: 7,
+  21: 9,
+  43: 34,
+  54: 34,
+  62: 18,
+  64: 60,
+  87: 24,
+  93: 73,
+  95: 75,
+  98: 79,
+};
+
+const createBoard = () => {
+  const cells = [];
+
+  for (let row = 9; row >= 0; row--) {
+    const numbers = [];
+
+    for (let col = 0; col < 10; col++) {
+      numbers.push(
+        row % 2 === 0
+          ? row * 10 + col + 1
+          : row * 10 + (10 - col)
+      );
+    }
+
+    cells.push(...numbers);
+  }
+
+  return cells;
+};
+
+const boardNumbers = createBoard();
 
 function App() {
-  const [board, setBoard] = useState(createEmptyBoard);
-  const [message, setMessage] = useState("");
-  const [isValid, setIsValid] = useState(null);
+  const [positions, setPositions] = useState([0, 0]);
+  const [currentPlayer, setCurrentPlayer] = useState(0);
+  const [dice, setDice] = useState(null);
+  const [winner, setWinner] = useState(null);
+  const [message, setMessage] = useState("Player 1's turn. Roll the dice!");
 
-  const handleChange = (row, col, value) => {
-    if (!/^[1-9]?$/.test(value)) return;
+  const rollDice = () => {
+    if (winner !== null) return;
 
-    const updatedBoard = board.map((r) => [...r]);
-    updatedBoard[row][col] = value;
+    const diceValue = Math.floor(Math.random() * 6) + 1;
+    setDice(diceValue);
 
-    setBoard(updatedBoard);
-    setMessage("");
-    setIsValid(null);
-  };
+    const oldPosition = positions[currentPlayer];
+    const newPosition = oldPosition + diceValue;
 
-  const validateSudoku = () => {
-    if (board.flat().some((value) => value === "")) {
-      setMessage("Please fill all cells before validating.");
-      setIsValid(false);
+    if (newPosition > 100) {
+      setMessage(
+        `Player ${currentPlayer + 1} needs an exact roll to reach 100.`
+      );
+      setCurrentPlayer((currentPlayer + 1) % 2);
       return;
     }
 
-    const isValidGroup = (group) =>
-      new Set(group).size === 9 &&
-      group.every((value) => /^[1-9]$/.test(value));
+    let finalPosition = newPosition;
+    let movementMessage = `Player ${currentPlayer + 1} moved to ${newPosition}.`;
 
-    // Check rows
-    for (let row = 0; row < 9; row++) {
-      if (!isValidGroup(board[row])) {
-        setMessage("Invalid Sudoku! Duplicate numbers found in a row/column/3x3 box.");
-        setIsValid(false);
-        return;
-      }
+    if (ladders[newPosition]) {
+      finalPosition = ladders[newPosition];
+      movementMessage = `Player ${currentPlayer + 1} climbed a ladder to ${finalPosition}!`;
+    } else if (snakes[newPosition]) {
+      finalPosition = snakes[newPosition];
+      movementMessage = `Player ${currentPlayer + 1} slid down a snake to ${finalPosition}!`;
     }
 
-    // Check columns
-    for (let col = 0; col < 9; col++) {
-      const column = board.map((row) => row[col]);
+    const updatedPositions = [...positions];
+    updatedPositions[currentPlayer] = finalPosition;
+    setPositions(updatedPositions);
 
-      if (!isValidGroup(column)) {
-        setMessage("Invalid Sudoku! Duplicate numbers found in a row/column/3x3 box.");
-        setIsValid(false);
-        return;
-      }
+    if (finalPosition === 100) {
+      setWinner(currentPlayer);
+      setMessage(`Player ${currentPlayer + 1} Wins!`);
+      return;
     }
 
-    // Check 3x3 boxes
-    for (let boxRow = 0; boxRow < 9; boxRow += 3) {
-      for (let boxCol = 0; boxCol < 9; boxCol += 3) {
-        const box = [];
-
-        for (let row = boxRow; row < boxRow + 3; row++) {
-          for (let col = boxCol; col < boxCol + 3; col++) {
-            box.push(board[row][col]);
-          }
-        }
-
-        if (!isValidGroup(box)) {
-          setMessage("Invalid Sudoku! Duplicate numbers found in a row/column/3x3 box.");
-          setIsValid(false);
-          return;
-        }
-      }
-    }
-
-    setMessage("Congratulations! The Sudoku grid is valid.");
-    setIsValid(true);
+    setMessage(movementMessage);
+    setCurrentPlayer((currentPlayer + 1) % 2);
   };
 
-  const clearBoard = () => {
-    setBoard(createEmptyBoard());
-    setMessage("");
-    setIsValid(null);
+  const resetGame = () => {
+    setPositions([0, 0]);
+    setCurrentPlayer(0);
+    setDice(null);
+    setWinner(null);
+    setMessage("Player 1's turn. Roll the dice!");
+  };
+
+  const getCellClass = (number) => {
+    let className = "cell";
+
+    if (ladders[number]) className += " ladder-cell";
+    if (snakes[number]) className += " snake-cell";
+    if (number === 100) className += " finish-cell";
+    if (number === 1) className += " start-cell";
+
+    return className;
   };
 
   return (
-    <div className="app">
-      <div className="container">
-        <h1>Sudoku Validator</h1>
+    <main className="game-container">
+      <header className="game-header">
+        <h1>Snakes &amp; Ladders</h1>
+        <p>Roll the dice, climb ladders, and avoid snakes!</p>
+      </header>
 
-        <p>Enter numbers 1-9 and validate the board.</p>
+      <section className="game-layout">
+        <div className="board" aria-label="Snakes and Ladders game board">
+          {boardNumbers.map((number) => {
+            const playerOneHere = positions[0] === number;
+            const playerTwoHere = positions[1] === number;
 
-        <div className="board">
-          {board.map((row, rowIndex) =>
-            row.map((value, colIndex) => (
-              <input
-                key={`${rowIndex}-${colIndex}`}
-                type="text"
-                inputMode="numeric"
-                maxLength="1"
-                className="cell"
-                value={value}
-                onChange={(event) =>
-                  handleChange(rowIndex, colIndex, event.target.value)
-                }
-                aria-label={`Row ${rowIndex + 1} Column ${colIndex + 1}`}
-              />
-            ))
-          )}
+            return (
+              <div
+                key={number}
+                className={getCellClass(number)}
+                data-cell={number}
+                aria-label={`Cell ${number}`}
+              >
+                <span className="cell-number">{number}</span>
+
+                {ladders[number] && (
+                  <span className="cell-symbol" title={`Ladder to ${ladders[number]}`}>
+                    🪜
+                  </span>
+                )}
+
+                {snakes[number] && (
+                  <span className="cell-symbol" title={`Snake to ${snakes[number]}`}>
+                    🐍
+                  </span>
+                )}
+
+                {number === 1 && (
+                  <span className="cell-symbol" title="Start">🏁</span>
+                )}
+
+                {number === 100 && (
+                  <span className="cell-symbol" title="Finish">🏆</span>
+                )}
+
+                <div className="player-tokens">
+                  {playerOneHere && (
+                    <span className="player-token player-one" title="Player 1">
+                      1
+                    </span>
+                  )}
+                  {playerTwoHere && (
+                    <span className="player-token player-two" title="Player 2">
+                      2
+                    </span>
+                  )}
+                </div>
+              </div>
+            );
+          })}
         </div>
 
-        <div className="buttons">
-          <button onClick={validateSudoku}>Validate</button>
-          <button onClick={clearBoard}>Clear</button>
-        </div>
+        <aside className="game-panel">
+          <h2>Game Status</h2>
 
-        {message && (
-          <p className={isValid ? "success-message" : "error-message"}>
+          <div className={`status-message ${winner !== null ? "winner-message" : ""}`}>
             {message}
-          </p>
-        )}
-      </div>
-    </div>
+          </div>
+
+          <div className="players">
+            <div className={`player-card player-one-card ${currentPlayer === 0 && winner === null ? "active-player" : ""}`}>
+              <span className="player-indicator player-one-indicator">1</span>
+              <div>
+                <h3>Player 1</h3>
+                <p>Position: {positions[0]}</p>
+              </div>
+              {currentPlayer === 0 && winner === null && (
+                <span className="turn-label">Your turn</span>
+              )}
+            </div>
+
+            <div className={`player-card player-two-card ${currentPlayer === 1 && winner === null ? "active-player" : ""}`}>
+              <span className="player-indicator player-two-indicator">2</span>
+              <div>
+                <h3>Player 2</h3>
+                <p>Position: {positions[1]}</p>
+              </div>
+              {currentPlayer === 1 && winner === null && (
+                <span className="turn-label">Your turn</span>
+              )}
+            </div>
+          </div>
+
+          <div className="dice-section">
+            <h3>Dice</h3>
+            <div className="dice" aria-label="Dice result">
+              {dice === null ? "🎲" : dice}
+            </div>
+
+            <button
+              className="roll-button"
+              onClick={rollDice}
+              disabled={winner !== null}
+            >
+              Roll Dice
+            </button>
+
+            <button className="reset-button" onClick={resetGame}>
+              New Game
+            </button>
+          </div>
+
+          {winner !== null && (
+            <div className="winner-banner">
+              🏆 Player {winner + 1} Wins!
+            </div>
+          )}
+
+          <div className="game-rules">
+            <h3>How to Play</h3>
+            <p>🎲 Roll the dice to move forward.</p>
+            <p>🪜 Land on a ladder to climb up.</p>
+            <p>🐍 Land on a snake to slide down.</p>
+            <p>🏆 Reach exactly 100 to win!</p>
+          </div>
+        </aside>
+      </section>
+    </main>
   );
 }
 
