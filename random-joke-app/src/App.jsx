@@ -3,70 +3,133 @@ import React, { useState } from "react";
 import "./App.css";
 
 function App() {
-  const [digits, setDigits] = useState([
-    0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
-  ]);
-  const [draggedIndex, setDraggedIndex] = useState(null);
+  const [formData, setFormData] = useState({
+    name: "",
+    username: "",
+    email: "",
+    password: "",
+  });
 
-  const handleDragStart = (event, index) => {
-    setDraggedIndex(index);
-    event.dataTransfer.setData("text/plain", String(index));
-    event.dataTransfer.effectAllowed = "move";
+  const [errors, setErrors] = useState({});
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    setErrors((prev) => ({
+      ...prev,
+      [name]: "",
+    }));
   };
 
-  const handleDragOver = (event) => {
-    event.preventDefault();
-  };
-
-  const handleDrop = (event, targetIndex) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
 
-    const sourceIndex =
-      draggedIndex !== null
-        ? draggedIndex
-        : Number(event.dataTransfer.getData("text/plain"));
+    const newErrors = {};
 
-    if (
-      sourceIndex === targetIndex ||
-      sourceIndex < 0 ||
-      sourceIndex >= digits.length
-    ) {
-      setDraggedIndex(null);
-      return;
+    if (!formData.name.trim()) {
+      newErrors.name = "Name is required";
     }
 
-    const updatedDigits = [...digits];
-    const [movedDigit] = updatedDigits.splice(sourceIndex, 1);
+    if (!formData.username.trim()) {
+      newErrors.username = "Username is required";
+    }
 
-    const insertIndex =
-      sourceIndex < targetIndex ? targetIndex - 1 : targetIndex;
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = "Please enter a valid email address";
+    }
 
-    updatedDigits.splice(insertIndex, 0, movedDigit);
+    if (!formData.password) {
+      newErrors.password = "Password is required";
+    } else if (formData.password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters";
+    }
 
-    setDigits(updatedDigits);
-    setDraggedIndex(null);
+    setErrors(newErrors);
+    setSubmitted(Object.keys(newErrors).length === 0);
   };
 
   return (
     <div className="app-container">
-      <h1>Drag &amp; Drop Digits</h1>
+      <div className="form-card">
+        <h1>Student Registration Form</h1>
 
-<p>Drag the boxes to reorder the digits 0–9.</p>
-<p>Tip: Try reordering to make 0123456789 or reverse it!</p>
-
-      <div className="number-container">
-        {digits.map((digit, index) => (
-          <div
-            key={digit}
-            className="number-item"
-            draggable
-            onDragStart={(event) => handleDragStart(event, index)}
-            onDragOver={handleDragOver}
-            onDrop={(event) => handleDrop(event, index)}
-          >
-            {digit}
+        <form onSubmit={handleSubmit} noValidate>
+          <div className="form-group">
+            <label htmlFor="name">Name</label>
+            <input
+              id="name"
+              type="text"
+              name="name"
+              placeholder="Enter your name"
+              value={formData.name}
+              onChange={handleChange}
+            />
+            {errors.name && (
+              <p className="error-message">{errors.name}</p>
+            )}
           </div>
-        ))}
+
+          <div className="form-group">
+            <label htmlFor="username">Username</label>
+            <input
+              id="username"
+              type="text"
+              name="username"
+              placeholder="Enter your username"
+              value={formData.username}
+              onChange={handleChange}
+            />
+            {errors.username && (
+              <p className="error-message">{errors.username}</p>
+            )}
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="email">Email</label>
+            <input
+              id="email"
+              type="text"
+              name="email"
+              placeholder="Enter your email"
+              value={formData.email}
+              onChange={handleChange}
+            />
+            {errors.email && (
+              <p className="error-message">{errors.email}</p>
+            )}
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="password">Password</label>
+            <input
+              id="password"
+              type="password"
+              name="password"
+              placeholder="Enter your password"
+              value={formData.password}
+              onChange={handleChange}
+            />
+            {errors.password && (
+              <p className="error-message">{errors.password}</p>
+            )}
+          </div>
+
+          <button type="submit">Register</button>
+
+          {submitted && (
+            <p className="success-message">
+              Registration successful!
+            </p>
+          )}
+        </form>
       </div>
     </div>
   );

@@ -5,9 +5,8 @@
 
 body {
   margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
-  background: #f3f4f6;
-  color: #1f2937;
+  font-family: Arial, sans-serif;
+  background: #f4f6f9;
 }
 
 .app-container {
@@ -18,107 +17,69 @@ body {
   padding: 24px;
 }
 
-.drag-card {
+.form-card {
   width: 100%;
-  max-width: 650px;
-  padding: 35px;
+  max-width: 450px;
+  padding: 32px;
   background: #ffffff;
-  border-radius: 14px;
-  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
-  text-align: center;
-}
-
-.drag-card h1 {
-  margin: 0 0 12px;
-  font-size: 30px;
-  color: #1e293b;
-}
-
-.description {
-  margin: 0 0 30px;
-  color: #64748b;
-  font-size: 16px;
-  line-height: 1.6;
-}
-
-.number-container {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 15px;
-  max-width: 390px;
-  margin: 0 auto;
-}
-
-.number-item {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  aspect-ratio: 1 / 1;
-  background: #2563eb;
-  color: #ffffff;
-  border: 2px solid transparent;
   border-radius: 10px;
-  font-size: 26px;
-  font-weight: bold;
-  cursor: grab;
-  user-select: none;
-  transition:
-    transform 0.2s ease,
-    background 0.2s ease,
-    opacity 0.2s ease,
-    border 0.2s ease;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.1);
 }
 
-.number-item:hover {
-  background: #1d4ed8;
-  transform: translateY(-3px);
+h1 {
+  margin: 0 0 25px;
+  text-align: center;
+  font-size: 25px;
+  color: #222;
 }
 
-.number-item:active {
-  cursor: grabbing;
+.form-group {
+  margin-bottom: 18px;
 }
 
-.number-item.dragging {
-  opacity: 0.4;
-  transform: scale(0.95);
-}
-
-.number-item.drag-over {
-  border: 2px dashed #f59e0b;
-  background: #dbeafe;
-  color: #1e40af;
-}
-
-.reset-button {
-  margin-top: 28px;
-  padding: 12px 30px;
-  background: #1e293b;
-  color: #ffffff;
-  border: none;
-  border-radius: 8px;
-  font-size: 15px;
+.form-group label {
+  display: block;
+  margin-bottom: 7px;
   font-weight: 600;
+  color: #333;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 15px;
+  outline: none;
+}
+
+.form-group input:focus {
+  border-color: #2563eb;
+}
+
+.error-message {
+  margin: 6px 0 0;
+  color: #dc2626;
+  font-size: 13px;
+}
+
+.success-message {
+  color: #15803d;
+  text-align: center;
+  margin-top: 15px;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+  background: #2563eb;
+  color: white;
+  font-size: 16px;
   cursor: pointer;
 }
 
-.reset-button:hover {
-  background: #334155;
-}
-
-@media (max-width: 480px) {
-  .drag-card {
-    padding: 22px 16px;
-  }
-
-  .drag-card h1 {
-    font-size: 25px;
-  }
-
-  .number-container {
-    gap: 10px;
-  }
-
-  .number-item {
-    font-size: 22px;
-  }
+button:hover {
+  background: #1d4ed8;
 }
