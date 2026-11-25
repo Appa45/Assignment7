@@ -2,96 +2,72 @@
 import React, { useState } from "react";
 import "./App.css";
 
-const initialItems = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-
 function App() {
-  const [items, setItems] = useState(initialItems);
-  const [draggedItem, setDraggedItem] = useState(null);
-  const [dragOverItem, setDragOverItem] = useState(null);
+  const [digits, setDigits] = useState([
+    0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
+  ]);
+  const [draggedIndex, setDraggedIndex] = useState(null);
 
   const handleDragStart = (event, index) => {
-    setDraggedItem(index);
-    event.dataTransfer.effectAllowed = "move";
+    setDraggedIndex(index);
     event.dataTransfer.setData("text/plain", String(index));
+    event.dataTransfer.effectAllowed = "move";
   };
 
-  const handleDragOver = (event, index) => {
+  const handleDragOver = (event) => {
     event.preventDefault();
-    event.dataTransfer.dropEffect = "move";
-    setDragOverItem(index);
   };
 
   const handleDrop = (event, targetIndex) => {
     event.preventDefault();
 
-    const sourceIndex = draggedItem;
+    const sourceIndex =
+      draggedIndex !== null
+        ? draggedIndex
+        : Number(event.dataTransfer.getData("text/plain"));
 
     if (
-      sourceIndex === null ||
-      sourceIndex === targetIndex
+      sourceIndex === targetIndex ||
+      sourceIndex < 0 ||
+      sourceIndex >= digits.length
     ) {
-      setDraggedItem(null);
-      setDragOverItem(null);
+      setDraggedIndex(null);
       return;
     }
 
-    const updatedItems = [...items];
-    const [selectedItem] = updatedItems.splice(sourceIndex, 1);
-    updatedItems.splice(targetIndex, 0, selectedItem);
+    const updatedDigits = [...digits];
+    const [movedDigit] = updatedDigits.splice(sourceIndex, 1);
 
-    setItems(updatedItems);
-    setDraggedItem(null);
-    setDragOverItem(null);
-  };
+    const insertIndex =
+      sourceIndex < targetIndex ? targetIndex - 1 : targetIndex;
 
-  const handleDragEnd = () => {
-    setDraggedItem(null);
-    setDragOverItem(null);
-  };
+    updatedDigits.splice(insertIndex, 0, movedDigit);
 
-  const resetItems = () => {
-    setItems(initialItems);
-    setDraggedItem(null);
-    setDragOverItem(null);
+    setDigits(updatedDigits);
+    setDraggedIndex(null);
   };
 
   return (
-    <main className="app-container">
-      <section className="drag-card">
-        <h1>Drag &amp; Drop</h1>
+    <div className="app-container">
+      <h1>Drag &amp; Drop Digits</h1>
 
-        <p className="description">
-          Drag and drop the numbers to rearrange their positions.
-        </p>
+      <p>Drag the boxes to reorder the digits 0–9.</p>
 
-        <div className="number-container">
-          {items.map((item, index) => (
-            <div
-              key={item}
-              className={`number-item ${
-                draggedItem === index ? "dragging" : ""
-              } ${
-                dragOverItem === index ? "drag-over" : ""
-              }`}
-              draggable="true"
-              onDragStart={(event) => handleDragStart(event, index)}
-              onDragOver={(event) => handleDragOver(event, index)}
-              onDrop={(event) => handleDrop(event, index)}
-              onDragEnd={handleDragEnd}
-              role="button"
-              tabIndex={0}
-              aria-label={`Number ${item}`}
-            >
-              {item}
-            </div>
-          ))}
-        </div>
-
-        <button className="reset-button" onClick={resetItems}>
-          Reset
-        </button>
-      </section>
-    </main>
+      <div className="number-container">
+        {digits.map((digit, index) => (
+          <div
+            key={digit}
+            className="number-item"
+            draggable
+            onDragStart={(event) => handleDragStart(event, index)}
+            onDragOver={handleDragOver}
+            onDrop={(event) => handleDrop(event, index)}
+          >
+            {digit}
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 
