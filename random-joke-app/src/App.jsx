@@ -183,23 +183,23 @@ function App() {
               : `Player ${currentPlayer + 1}`}
           </div>
 
-          <div className="players">
-            <div className="player-card player-one-card">
-              <span className="player-indicator player-one-indicator">1</span>
-              <div>
-                <h3>Player 1</h3>
-                <p>Position: {positions[0]}</p>
-              </div>
-            </div>
+     <div className="players">
+  <div className="player-card player-one-card">
+    <span className="player-indicator player-one-indicator">P1</span>
+    <div>
+      <h3>Player 1</h3>
+      <p>Position: {positions[0]}</p>
+    </div>
+  </div>
 
-            <div className="player-card player-two-card">
-              <span className="player-indicator player-two-indicator">2</span>
-              <div>
-                <h3>Player 2</h3>
-                <p>Position: {positions[1]}</p>
-              </div>
-            </div>
-          </div>
+  <div className="player-card player-two-card">
+    <span className="player-indicator player-two-indicator">P2</span>
+    <div>
+      <h3>Player 2</h3>
+      <p>Position: {positions[1]}</p>
+    </div>
+  </div>
+</div>
 
           <div className="dice-section">
             <h3>Dice</h3>
