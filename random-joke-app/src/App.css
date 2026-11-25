@@ -334,3 +334,13 @@ button {
     font-size: 9px;
   }
 }
+
+.turn-indicator {
+  text-align: center;
+  padding: 12px;
+  margin-bottom: 16px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  border-radius: 8px;
+  font-size: 17px;
+}

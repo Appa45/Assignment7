@@ -32,17 +32,14 @@ const createBoard = () => {
   const cells = [];
 
   for (let row = 9; row >= 0; row--) {
-    const numbers = [];
-
     for (let col = 0; col < 10; col++) {
-      numbers.push(
+      const number =
         row % 2 === 0
           ? row * 10 + col + 1
-          : row * 10 + (10 - col)
-      );
-    }
+          : row * 10 + (10 - col);
 
-    cells.push(...numbers);
+      cells.push(number);
+    }
   }
 
   return cells;
@@ -63,26 +60,26 @@ function App() {
     const diceValue = Math.floor(Math.random() * 6) + 1;
     setDice(diceValue);
 
-    const oldPosition = positions[currentPlayer];
-    const newPosition = oldPosition + diceValue;
+    const currentPosition = positions[currentPlayer];
+    const nextPosition = currentPosition + diceValue;
 
-    if (newPosition > 100) {
+    if (nextPosition > 100) {
       setMessage(
         `Player ${currentPlayer + 1} needs an exact roll to reach 100.`
       );
-      setCurrentPlayer((currentPlayer + 1) % 2);
+      setCurrentPlayer((prev) => (prev + 1) % 2);
       return;
     }
 
-    let finalPosition = newPosition;
-    let movementMessage = `Player ${currentPlayer + 1} moved to ${newPosition}.`;
+    let finalPosition = nextPosition;
+    let resultMessage = `Player ${currentPlayer + 1} moved to ${nextPosition}.`;
 
-    if (ladders[newPosition]) {
-      finalPosition = ladders[newPosition];
-      movementMessage = `Player ${currentPlayer + 1} climbed a ladder to ${finalPosition}!`;
-    } else if (snakes[newPosition]) {
-      finalPosition = snakes[newPosition];
-      movementMessage = `Player ${currentPlayer + 1} slid down a snake to ${finalPosition}!`;
+    if (ladders[nextPosition]) {
+      finalPosition = ladders[nextPosition];
+      resultMessage = `Player ${currentPlayer + 1} climbed a ladder to ${finalPosition}!`;
+    } else if (snakes[nextPosition]) {
+      finalPosition = snakes[nextPosition];
+      resultMessage = `Player ${currentPlayer + 1} slid down a snake to ${finalPosition}!`;
     }
 
     const updatedPositions = [...positions];
@@ -95,8 +92,8 @@ function App() {
       return;
     }
 
-    setMessage(movementMessage);
-    setCurrentPlayer((currentPlayer + 1) % 2);
+    setMessage(resultMessage);
+    setCurrentPlayer((prev) => (prev + 1) % 2);
   };
 
   const resetGame = () => {
@@ -112,8 +109,8 @@ function App() {
 
     if (ladders[number]) className += " ladder-cell";
     if (snakes[number]) className += " snake-cell";
-    if (number === 100) className += " finish-cell";
     if (number === 1) className += " start-cell";
+    if (number === 100) className += " finish-cell";
 
     return className;
   };
@@ -121,96 +118,93 @@ function App() {
   return (
     <main className="game-container">
       <header className="game-header">
-        <h1>Snakes &amp; Ladders</h1>
-        <p>Roll the dice, climb ladders, and avoid snakes!</p>
+        <h1>Snake &amp; Ladders</h1>
+
+        <p>
+          Exact 100 is required to win. Land on a ladder to climb up, a snake
+          to slide down.
+        </p>
       </header>
 
       <section className="game-layout">
         <div className="board" aria-label="Snakes and Ladders game board">
-          {boardNumbers.map((number) => {
-            const playerOneHere = positions[0] === number;
-            const playerTwoHere = positions[1] === number;
+          {boardNumbers.map((number) => (
+            <div
+              key={number}
+              className={getCellClass(number)}
+              data-cell={number}
+            >
+              <span className="cell-number">{number}</span>
 
-            return (
-              <div
-                key={number}
-                className={getCellClass(number)}
-                data-cell={number}
-                aria-label={`Cell ${number}`}
-              >
-                <span className="cell-number">{number}</span>
+              {ladders[number] && (
+                <span className="cell-symbol">🪜</span>
+              )}
 
-                {ladders[number] && (
-                  <span className="cell-symbol" title={`Ladder to ${ladders[number]}`}>
-                    🪜
+              {snakes[number] && (
+                <span className="cell-symbol">🐍</span>
+              )}
+
+              {number === 1 && (
+                <span className="cell-symbol">🏁</span>
+              )}
+
+              {number === 100 && (
+                <span className="cell-symbol">🏆</span>
+              )}
+
+              <div className="player-tokens">
+                {positions[0] === number && (
+                  <span className="player-token player-one" title="Player 1">
+                    1
                   </span>
                 )}
 
-                {snakes[number] && (
-                  <span className="cell-symbol" title={`Snake to ${snakes[number]}`}>
-                    🐍
+                {positions[1] === number && (
+                  <span className="player-token player-two" title="Player 2">
+                    2
                   </span>
                 )}
-
-                {number === 1 && (
-                  <span className="cell-symbol" title="Start">🏁</span>
-                )}
-
-                {number === 100 && (
-                  <span className="cell-symbol" title="Finish">🏆</span>
-                )}
-
-                <div className="player-tokens">
-                  {playerOneHere && (
-                    <span className="player-token player-one" title="Player 1">
-                      1
-                    </span>
-                  )}
-                  {playerTwoHere && (
-                    <span className="player-token player-two" title="Player 2">
-                      2
-                    </span>
-                  )}
-                </div>
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
 
         <aside className="game-panel">
           <h2>Game Status</h2>
 
-          <div className={`status-message ${winner !== null ? "winner-message" : ""}`}>
+          <div className="status-message">
             {message}
           </div>
 
+          <div className="turn-indicator">
+            <strong>Turn: </strong>
+            {winner !== null
+              ? `Player ${winner + 1} Wins!`
+              : `Player ${currentPlayer + 1}`}
+          </div>
+
           <div className="players">
-            <div className={`player-card player-one-card ${currentPlayer === 0 && winner === null ? "active-player" : ""}`}>
+            <div className="player-card player-one-card">
               <span className="player-indicator player-one-indicator">1</span>
               <div>
                 <h3>Player 1</h3>
                 <p>Position: {positions[0]}</p>
               </div>
-              {currentPlayer === 0 && winner === null && (
-                <span className="turn-label">Your turn</span>
-              )}
             </div>
 
-            <div className={`player-card player-two-card ${currentPlayer === 1 && winner === null ? "active-player" : ""}`}>
+            <div className="player-card player-two-card">
               <span className="player-indicator player-two-indicator">2</span>
               <div>
                 <h3>Player 2</h3>
                 <p>Position: {positions[1]}</p>
               </div>
-              {currentPlayer === 1 && winner === null && (
-                <span className="turn-label">Your turn</span>
-              )}
             </div>
           </div>
 
           <div className="dice-section">
             <h3>Dice</h3>
-            <div className="dice" aria-label="Dice result">
+
+            <div className="dice">
               {dice === null ? "🎲" : dice}
             </div>
 
@@ -222,8 +216,11 @@ function App() {
               Roll Dice
             </button>
 
-            <button className="reset-button" onClick={resetGame}>
-              New Game
+            <button
+              className="reset-button"
+              onClick={resetGame}
+            >
+              Reset
             </button>
           </div>
 
