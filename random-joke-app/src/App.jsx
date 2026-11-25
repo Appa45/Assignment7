@@ -51,7 +51,8 @@ function App() {
     <div className="app-container">
       <h1>Drag &amp; Drop Digits</h1>
 
-      <p>Drag the boxes to reorder the digits 0–9.</p>
+<p>Drag the boxes to reorder the digits 0–9.</p>
+<p>Tip: Try reordering to make 0123456789 or reverse it!</p>
 
       <div className="number-container">
         {digits.map((digit, index) => (
