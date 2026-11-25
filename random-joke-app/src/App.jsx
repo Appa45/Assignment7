@@ -6,8 +6,10 @@ function App() {
   const [formData, setFormData] = useState({
     name: "",
     username: "",
+    college: "",
     email: "",
     password: "",
+    address: "",
   });
 
   const [errors, setErrors] = useState({});
@@ -40,21 +42,38 @@ function App() {
       newErrors.username = "Username is required";
     }
 
+    if (!formData.college.trim()) {
+      newErrors.college = "College is required";
+    }
+
     if (!formData.email.trim()) {
       newErrors.email = "Email is required";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = "Please enter a valid email address";
+      newErrors.email = "Enter a valid email address";
     }
 
     if (!formData.password) {
       newErrors.password = "Password is required";
-    } else if (formData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
+    } else if (formData.password.length < 8) {
+      newErrors.password = "Password must be at least 8 characters";
+    }
+
+    if (!formData.address.trim()) {
+      newErrors.address = "Address is required";
     }
 
     setErrors(newErrors);
     setSubmitted(Object.keys(newErrors).length === 0);
   };
+
+  const fields = [
+    { name: "name", label: "Name", type: "text" },
+    { name: "username", label: "Username", type: "text" },
+    { name: "college", label: "College", type: "text" },
+    { name: "email", label: "Email", type: "text" },
+    { name: "password", label: "Password", type: "password" },
+    { name: "address", label: "Address", type: "text" },
+  ];
 
   return (
     <div className="app-container">
@@ -62,65 +81,26 @@ function App() {
         <h1>Student Registration Form</h1>
 
         <form onSubmit={handleSubmit} noValidate>
-          <div className="form-group">
-            <label htmlFor="name">Name</label>
-            <input
-              id="name"
-              type="text"
-              name="name"
-              placeholder="Enter your name"
-              value={formData.name}
-              onChange={handleChange}
-            />
-            {errors.name && (
-              <p className="error-message">{errors.name}</p>
-            )}
-          </div>
+          {fields.map((field) => (
+            <div className="form-group" key={field.name}>
+              <label htmlFor={field.name}>{field.label}</label>
 
-          <div className="form-group">
-            <label htmlFor="username">Username</label>
-            <input
-              id="username"
-              type="text"
-              name="username"
-              placeholder="Enter your username"
-              value={formData.username}
-              onChange={handleChange}
-            />
-            {errors.username && (
-              <p className="error-message">{errors.username}</p>
-            )}
-          </div>
+              <input
+                id={field.name}
+                type={field.type}
+                name={field.name}
+                placeholder={`Enter your ${field.label.toLowerCase()}`}
+                value={formData[field.name]}
+                onChange={handleChange}
+              />
 
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
-            <input
-              id="email"
-              type="text"
-              name="email"
-              placeholder="Enter your email"
-              value={formData.email}
-              onChange={handleChange}
-            />
-            {errors.email && (
-              <p className="error-message">{errors.email}</p>
-            )}
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input
-              id="password"
-              type="password"
-              name="password"
-              placeholder="Enter your password"
-              value={formData.password}
-              onChange={handleChange}
-            />
-            {errors.password && (
-              <p className="error-message">{errors.password}</p>
-            )}
-          </div>
+              {errors[field.name] && (
+                <p className="error-message">
+                  {errors[field.name]}
+                </p>
+              )}
+            </div>
+          ))}
 
           <button type="submit">Register</button>
 
